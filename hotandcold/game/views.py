@@ -16,3 +16,7 @@ def register(request):
 
 def game(request):
     return HttpResponse("Game page.")
+
+
+def profile(request):
+    return HttpResponse("User profile page.")
