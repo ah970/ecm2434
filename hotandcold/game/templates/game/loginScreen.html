@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+/* Top of the sreen borders/titles */
+.topBorder{
+  border: 2px outset black;
+  background-color: lightblue;    
+  text-align: center;
+}
+
+.currentBorderTitle{
+  border: 2px outset black;
+  background-color: darkorange;    
+  text-align: center;
+}
+
+/* Middle of screen buttons/text */
+.textInputCenter{
+	text-align: center;
+}
+
+/* Center align class */
+.centerAlign{
+	text-align: center;
+}
+
+/* Bottom buttons margins */
+#bottomButtons{
+	margin-top: 100px;
+	margin-left: 150px;
+	margin-right: 150px;
+}
+
+</style>
+</head>
+
+<body>
+<!-- Welcome to hot or cold logo at top -->
+<div class="topBorder">
+  <h1>Welcome to HOT or COLD</h2>
+</div>
+
+<!-- Current title border -->
+<h2 class="currentBorderTitle">Login Screen</h3>
+
+<!-- User input for account creation div: -->
+<div class="textInputCenter">
+	<form>
+
+		<label for="userName">Username:</label><br>
+		<input type="text" id="usernameInput" name="usernameInput">
+		<br><br>
+		
+		<label for="passwordInput">Password:</label><br>
+		<input type="text" id="passwordInput" name="passwordInput">
+		<br><br>
+
+		<button>Login</button>
+	</form>
+	<br><br>
+</div>
+
+<!-- Back button -->
+<div class="centerAlign">
+	<button id="bottomButtons">BACK</button>
+	<button id="bottomButtons">Create Account</button>
+</div>
+
+</body>
+
+</html>
