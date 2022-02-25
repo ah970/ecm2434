@@ -7,11 +7,11 @@ def home(request):
 
 
 def login(request):
-    return HttpResponse("Login page.")
+    return render(request, "game/loginScreen.html", None)
 
 
 def register(request):
-    return HttpResponse("Registration page.")
+    return render(request, "game/accountCreation.html", None) 
 
 
 def game(request):
