@@ -1,7 +1,8 @@
 from django.contrib.auth import login as auth_login
-from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
+from .forms import UserCreationForm
 
 
 def home(request):
