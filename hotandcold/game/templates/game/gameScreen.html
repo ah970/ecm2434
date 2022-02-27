@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+.topBorder{
+  border: 2px outset black;
+  background-color: lightblue;    
+  text-align: center;
+}
+
+.currentBorderTitle{
+  border: 2px outset black;
+  background-color: darkorange;    
+  text-align: center;
+}
+
+.textInputCenter{
+	text-align: center;
+}
+
+.bottomScreenButtons{
+	padding-left: 50px;
+}
+
+/* Code to make the button round */
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 100px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button5 {
+	border-radius: 50%;
+}
+</style>
+
+
+</head>
+
+<body>
+<!-- Welcome to hot or cold logo at top -->
+<div class="topBorder">
+  <h1>Welcome to HOT or COLD</h2>
+</div>
+
+<!-- Current title border -->
+<h2 class="currentBorderTitle">Account Creation</h3>
+
+<!-- Center of screen -->
+<div class="textInputCenter">
+	<button class="button button5">50d</button>
+</div>
+
+<!-- Javascript to change button -->
+<script>
+document.getElementById("demo").outerHTML= "NEW TEXT"; 
+</script>
+
+<!-- Back button -->
+<div class="bottomScreenButtons">
+	<button id="returnButton">BACK</button>
+</div>
+
+
+</body>
+
+</html>
