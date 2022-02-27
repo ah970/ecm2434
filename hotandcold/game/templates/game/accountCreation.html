@@ -37,20 +37,10 @@
 
 <!-- User input for account creation div: -->
 <div class="textInputCenter">
-	<form>
-		<label for="emailInput">Email:</label><br>
-		<input type="text" id="emailInput" name="emailInput">
-		<br><br>
-
-		<label for="userName">Username:</label><br>
-		<input type="text" id="usernameInput" name="usernameInput">
-		<br><br>
-		
-		<label for="passwordInput">Password:</label><br>
-		<input type="text" id="passwordInput" name="passwordInput">
-		<br><br>
-
-		<button>Create Account</button>
+	<form method="POST">
+		{% csrf_token %}
+		{{ registration_form }}
+		<button type="submit">Create Account</button>
 	</form>
 	<br><br>
 </div>
