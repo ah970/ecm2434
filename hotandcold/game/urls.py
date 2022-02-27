@@ -9,4 +9,4 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("game/", views.game, name="game"),
     path("profile/", views.profile, name="profile"),
-    ]
+]

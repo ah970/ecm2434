@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 
-# Create your views here.
+
 def home(request):
     return render(request, "game/homeScreen.html", None)
-    return HttpResponse("Home page.")
 
 
 def login(request):
@@ -12,11 +11,12 @@ def login(request):
 
 
 def register(request):
-    return render(request, "game/accountCreation.html", None) 
+    return render(request, "game/accountCreation.html", None)
 
 
 def game(request):
     return render(request, "game/gameScreen.html", None)
+
 
 def profile(request):
     return HttpResponse("User profile page.")
