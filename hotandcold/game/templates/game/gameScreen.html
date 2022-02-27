@@ -56,12 +56,26 @@
 
 <!-- Center of screen -->
 <div class="textInputCenter">
-	<button class="button button5">50d</button>
+	<button class="button button5" id="degreeButton" onclick="buttonRun()">50d</button>
 </div>
 
 <!-- Javascript to change button -->
 <script>
-document.getElementById("demo").outerHTML= "NEW TEXT"; 
+	var buttonToChange = document.getElementById("degreeButton");
+	var str = "Function has run and string is diff";
+
+// Change the button of the text
+	buttonToChange.innerHTML = str;
+
+	function changeBackgroundColor(color){
+		document.body.style.background = color;
+
+	}
+
+	function buttonRun(){
+		changeBackgroundColor('yellow');
+		buttonToChange.innerHTML = "Background color changed boi"
+	}
 </script>
 
 <!-- Back button -->
