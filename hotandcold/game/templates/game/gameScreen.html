@@ -56,24 +56,26 @@
 
 <!-- Center of screen -->
 <div class="textInputCenter">
-	<button class="button button5" id="degreeButton" onclick="buttonRun()">50d</button>
+	<button class="button button5" id="degreeButton" onclick="buttonRun()"> </button>
 </div>
 
 <!-- Javascript to change button -->
 <script>
 	var buttonToChange = document.getElementById("degreeButton");
-	var str = "Function has run and string is diff";
 
-// Change the button of the text
+// Temporary hard code, here is where you get the degree calculation
+	var str = "Function has run and string is diff";
 	buttonToChange.innerHTML = str;
 
+//Function that change the color of the background
 	function changeBackgroundColor(color){
-		document.body.style.background = color;
-
+		buttonToChange.style.background = color;
 	}
 
+// Function that is called when the button is clicked
 	function buttonRun(){
-		changeBackgroundColor('yellow');
+		// The color should change here depending on GPS calculations
+		changeBackgroundColor('#E77114');
 		buttonToChange.innerHTML = "Background color changed boi"
 	}
 </script>
