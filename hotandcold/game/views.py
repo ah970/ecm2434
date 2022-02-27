@@ -15,8 +15,7 @@ def register(request):
 
 
 def game(request):
-    return HttpResponse("Game page.")
-
+    return render(request, "game/gameScreen.html", None)
 
 def profile(request):
     return HttpResponse("User profile page.")
