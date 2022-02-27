@@ -2,6 +2,8 @@
 <html>
 
 <head>
+
+<!-- CSS Styling below: -->
 <style>
 .topBorder{
   border: 2px outset black;
@@ -23,7 +25,7 @@
 	padding-left: 50px;
 }
 
-/* Code to make the button round */
+	/* Code to make the button round */
 .button {
   background-color: #04AA6D; /* Green */
   border: none;
@@ -45,34 +47,20 @@
 
 </head>
 
-<body>
-<!-- Welcome to hot or cold logo at top -->
-<div class="topBorder">
-  <h1>Welcome to HOT or COLD</h2>
-</div>
-
-<!-- Current title border -->
-<h2 class="currentBorderTitle">Account Creation</h3>
-
-<!-- Center of screen -->
-<div class="textInputCenter">
-	<button class="button button5" id="degreeButton" onclick="buttonRun()"> </button>
-</div>
-
-<!-- Javascript to change button -->
+	<!-- Javascript to change button -->
 <script>
 	var buttonToChange = document.getElementById("degreeButton");
 
-// Temporary hard code, here is where you get the degree calculation
+	// Temporary hard code, here is where you get the degree calculation
 	var str = "Function has run and string is diff";
 	buttonToChange.innerHTML = str;
 
-//Function that change the color of the background
+	//Function that change the color of the background
 	function changeBackgroundColor(color){
 		buttonToChange.style.background = color;
 	}
 
-// Function that is called when the button is clicked
+	// Function that is called when the button is clicked
 	function buttonRun(){
 		// The color should change here depending on GPS calculations
 		changeBackgroundColor('#E77114');
@@ -80,12 +68,25 @@
 	}
 </script>
 
-<!-- Back button -->
-<div class="bottomScreenButtons">
-	<button id="returnButton">BACK</button>
-</div>
+<body>
+	<!-- Welcome to hot or cold logo at top -->
+	<div class="topBorder">
+		<h1>Welcome to HOT or COLD</h2>
+	</div>
+
+	<!-- Current title border -->
+	<h2 class="currentBorderTitle">Account Creation</h3>
+
+	<!-- Center of screen -->
+	<div class="textInputCenter">
+		<button class="button button5" id="degreeButton" onclick="buttonRun()"> </button>
+	</div>
 
 
+	<!-- Back button -->
+	<div class="bottomScreenButtons">
+		<button id="returnButton">BACK</button>
+	</div>
 </body>
 
 </html>
