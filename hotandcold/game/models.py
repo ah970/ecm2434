@@ -1,10 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create the user model
 class User(models.Model):
-    username = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
 
     def __str__(self):
