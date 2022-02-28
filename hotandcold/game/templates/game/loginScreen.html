@@ -47,17 +47,10 @@
 
 <!-- User input for account creation div: -->
 <div class="textInputCenter">
-	<form>
-
-		<label for="userName">Username:</label><br>
-		<input type="text" id="usernameInput" name="usernameInput">
-		<br><br>
-		
-		<label for="passwordInput">Password:</label><br>
-		<input type="text" id="passwordInput" name="passwordInput">
-		<br><br>
-
-		<button>Login</button>
+	<form method="POST">
+		{% csrf_token %}
+		{{ form }}
+		<button type="submit">Login</button>
 	</form>
 </div>
 
