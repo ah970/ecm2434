@@ -1,4 +1,4 @@
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -9,7 +9,7 @@ def home(request):
     return render(request, "game/homeScreen.html", None)
 
 
-def login(request):
+def log_in(request):
     return render(request, "game/loginScreen.html", None)
 
 
@@ -18,7 +18,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            auth_login(request, user)
+            login(request, user)
             return redirect("home")
 
     form = UserCreationForm()
