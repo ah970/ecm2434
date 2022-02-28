@@ -30,4 +30,4 @@ def game(request):
 
 
 def profile(request):
-    return HttpResponse("User profile page.")
+    return render(request, "game/userProfile.html")
