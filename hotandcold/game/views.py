@@ -7,7 +7,7 @@ from .forms import UserCreationForm
 
 
 def home(request):
-    return render(request, "game/homeScreen.html", None)
+    return render(request, "game/home.html", None)
 
 
 def log_in(request):
