@@ -8,7 +8,7 @@
         
     <!-- ENTRE JAVASCRIPT HERE-->
     <div class="hi-player" style="left: 200px;">
-        <h1>Hi @player</h1>
+        <h1>Hi: {{ user.username|default:"guest" }}</h1>
     </div>
     
     <div class="game-rules" style="border: outset black; position: fixed; top: 300px; left: 260px">
