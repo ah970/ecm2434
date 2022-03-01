@@ -48,7 +48,7 @@ def register(request):
 
 
 def game(request):
-    return render(request, "game/game.html", None)
+    return render(request, "game/gameScreen.html", None)
 
 
 def create_event(request):
