@@ -1,0 +1,35 @@
+{% extends 'game/base.html' %}
+
+{% block title%}Home{% endblock %}
+
+{% block page %}Home{% endblock %} 
+
+{% block content %} 
+        
+    <!-- ENTRE JAVASCRIPT HERE-->
+    <div class="hi-player" style="left: 200px;">
+        <h1>Hi @player</h1>
+    </div>
+    
+    <div class="game-rules" style="border: outset black; position: fixed; top: 300px; left: 260px">
+        <h2>The rules are simple:</h2>
+        <ul>
+            <li>Try to reach the secret destination!</li>
+            <li>You cannot collaborate with an opponent!</li>
+            <li>You must fight to the death!</li>
+        </ul>
+    </div>
+
+    <!-- ENTRE JAVASCRIPT HERE-->
+    <div class="global-leaderboard" style="border: outset black; position: fixed; top: 300px; right: 100px;">
+        <h2>Global Leaderboard</h2>
+        <ul>
+            <li>Player....</li>
+            <li>Player....</li>
+            <li>Player....</li>
+            <li>Player....</li>
+        </ul>
+    </div>
+    
+    
+{% endblock%}

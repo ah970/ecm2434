@@ -1,96 +1,47 @@
-<!DOCTYPE html>
-<html>
+{% extends 'game/base.html' %}
 
-<head>
+{% block title%}Game{% endblock %}
 
-<!-- CSS Styling below: -->
-<style>
-.topBorder{
-  border: 2px outset black;
-  background-color: lightblue;    
-  text-align: center;
-}
+{% block page %}Game{% endblock %} 
 
-.currentBorderTitle{
-  border: 2px outset black;
-  background-color: darkorange;    
-  text-align: center;
-}
+{% block content %} 
+  <style>
 
-.textInputCenter{
-	text-align: center;
-}
+    .textInputCenter{
+      text-align: center;
+    }
 
-.bottomScreenButtons{
-	padding-left: 50px;
-}
+    .bottomScreenButtons{
+      padding-left: 50px;
+    }
 
-	/* Code to make the button round */
-.button {
-  background-color: #04AA6D; /* Green */
-  border: none;
-  color: white;
-  padding: 100px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-}
+    /* Code to make the button round */
+    .button {
+      background-color: #04AA6D; /* Green */
+      border: none;
+      color: white;
+      padding: 100px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
 
-.button5 {
-	border-radius: 50%;
-}
-</style>
+    .button5 {
+      border-radius: 50%;
+    }
+  </style>
 
+  <!-- Center of screen -->
+  <div class="textInputCenter">
+    <button class="button button5">50d</button>
+  </div>
 
-</head>
+  <!-- Javascript to change button -->
+  <script>
+  document.getElementById("demo").outerHTML= "NEW TEXT"; 
+  </script>
 
-
-<body>
-	<!-- Welcome to hot or cold logo at top -->
-	<div class="topBorder">
-		<h1>Welcome to HOT or COLD</h2>
-	</div>
-
-	<!-- Current title border -->
-	<h2 class="currentBorderTitle">Account Creation</h3>
-
-	<!-- Center of screen -->
-	<div class="textInputCenter">
-		<button class="button button5" id="degreeButton" onclick="buttonRun()"> </button>
-	</div>
-
-
-
-	<!-- Back button -->
-	<div class="bottomScreenButtons">
-		<form action="http://localhost:8000/">
-			<button type="submit" id="returnButton">Back</button>
-		</form>
-	</div>
-
-	<!-- Javascript to change button -->
-<script>
-	var buttonToChange = document.getElementById("degreeButton");
-
-	// Temporary hard code, here is where you get the degree calculation
-	var str = "Function has run and string is diff";
-	buttonToChange.innerHTML = str;
-
-	//Function that change the color of the background
-	function changeBackgroundColor(color){
-		buttonToChange.style.background = color;
-	}
-
-	// Function that is called when the button is clicked
-	function buttonRun(){
-		// The color should change here depending on GPS calculations
-		changeBackgroundColor('#E77114');
-		buttonToChange.innerHTML = "Background color changed boi"
-	}
-</script>
-</body>
-
-</html>
+{% endblock %}
