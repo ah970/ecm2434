@@ -24,7 +24,7 @@ def log_in(request):
                 return redirect("home")
 
     form = AuthenticationForm()
-    return render(request, "game/temp/log_in.html", {"form": form})
+    return render(request, "game/loginScreen.html", {"form": form})
 
 
 def log_out(request):
@@ -44,11 +44,11 @@ def register(request):
             return redirect("home")
 
     form = UserRegistrationForm()
-    return render(request, "game/temp/register.html", {"form": form})
+    return render(request, "game/accountCreation.html", {"form": form})
 
 
 def game(request):
-    return render(request, "game/temp/game.html", None)
+    return render(request, "game/game.html", None)
 
 
 def create_event(request):
