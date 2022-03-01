@@ -1,50 +1,60 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from .forms import UserCreationForm
+from .models import Player
+from .forms import UserRegistrationForm, EventCreationForm
 
 
 def home(request):
-    return render(request, "game/homeScreen.html", None)
+    return render(request, "game/temp/home.html", None)
 
 
 def log_in(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
+
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
 
             user = authenticate(username=username, password=password)
             if user is not None:
-                print("yes")
                 login(request, user)
-                print("yes")
                 return redirect("home")
-            else:
-                print("no")
 
     form = AuthenticationForm()
-    return render(request, "game/loginScreen.html", {"form": form})
+    return render(request, "game/temp/log_in.html", {"form": form})
+
+
+def log_out(request):
+    logout(request)
+    return redirect("home")
 
 
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
+
         if form.is_valid():
             user = form.save()
+            p = Player(user=user)
+            p.save()
             login(request, user)
             return redirect("home")
 
-    form = UserCreationForm()
-    return render(request, "game/accountCreation.html", {"form": form})
+    form = UserRegistrationForm()
+    return render(request, "game/temp/register.html", {"form": form})
 
 
 def game(request):
-    return render(request, "game/gameScreen.html", None)
+    return render(request, "game/temp/game.html", None)
+
+
+def create_event(request):
+    form = EventCreationForm
+    return render(request, "game/temp/create_event.html", {"form": form})
 
 
 def profile(request):
-    return render(request, "game/userProfile.html")
+    return render(request, "game/temp/profile.html", None)

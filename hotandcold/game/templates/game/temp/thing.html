@@ -1,0 +1,11 @@
+{% if user.player.is_game_master %}
+	<h1>Create Event</h1>
+	<form>
+		{% csrf_token %}
+		{{ form }}
+
+		<button type="submit">Create event</button>
+	</form>
+{% else %}
+	<p>You are not authorised to view this page.</p>
+{% endif %}
