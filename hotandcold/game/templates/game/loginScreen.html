@@ -61,16 +61,20 @@
 
 	<!-- User input for account creation div: -->
 	<div class="textInputCenter">
-		<form method="post" action="/" class="form-group">
+		<form method="post" class="form-group">
 			{% csrf_token %} 
 			{{form.as_p}}
-			<label for="userName">Username:</label><br>
+
+			<!-- Charlies code below here has no affect on the form, as 
+			needs to be changed from within django not using HTML here  -->
+
+			<!-- <label for="userName">Username:</label><br>
 			<input type="text" id="usernameInput" name="usernameInput" style="padding: 3px 50px 3px 50px;" placeholder="Enter Username">
 			<br><br>
 			
 			<label for="passwordInput">Password:</label><br>
 			<input type="text" id="passwordInput" name="passwordInput" style="padding: 3px 50px 3px 50px;" placeholder="Enter Username">
-			<br><br>
+			<br><br> -->
 
 			<button type="reset" class="btn btn-success">Back</button>
 			<button type="submit" class="btn btn-success">Login</button>

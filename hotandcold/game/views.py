@@ -7,7 +7,7 @@ from .forms import UserRegistrationForm, EventCreationForm
 
 
 def home(request):
-    return render(request, "game/temp/home.html", None)
+    return render(request, "game/home.html", None)
 
 
 def log_in(request):
@@ -57,4 +57,4 @@ def create_event(request):
 
 
 def profile(request):
-    return render(request, "game/temp/profile.html", None)
+    return render(request, "game/profile.html")

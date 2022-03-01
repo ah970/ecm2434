@@ -48,11 +48,11 @@
 	<h2 class="currentBorderTitle">Account Creation</h3>
 
 	<!-- User input for account creation div: -->
-	<div class="textInputCenter">
-		<form method="post" action="/" class="form-group">
+	<div class = "form-group">
+		<form method="post" action="/">
 			{% csrf_token %}
 			{{form.as_p}}
-			<label for="emailInput">Email:</label><br>
+			<!-- <label for="emailInput">Email:</label><br>
 			<input type="text" id="emailInput" name="emailInput" style="padding: 3px 50px 3px 50px;" placeholder="Enter Email">
 			<br><br>
 
@@ -62,19 +62,10 @@
 			
 			<label for="passwordInput">Password:</label><br>
 			<input type="password" id="passwordInput" name="passwordInput" style="padding: 3px 50px 3px 50px;" placeholder="Enter Password">
-			<br><br>
-
-			<div> 
-				<button type="reset" id="returnButton" class="btn btn-success" style="padding:5px 32px 5px 32px">Back</button>
-				<button type="submit" name="save" class="btn btn-success" style="padding:5px 32px 5px 32px">Create Account</button>
-				<!-- Back button 
-				<div class="bottomScreenButtons">
-					<button type="reset" id="returnButton" >Back</button>
-				</div> -->
-			</div>
-
+			<br><br> -->
+			<button type="reset" id="returnButton" class="btn btn-success" style="padding:5px 32px 5px 32px">Back</button>
+			<button type="submit" name="save" class="btn btn-success" style="padding:5px 32px 5px 32px">Create Account</button>
 		</form>
-		<br><br>
 	</div>
 
 	
