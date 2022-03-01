@@ -47,4 +47,4 @@ def game(request):
 
 
 def profile(request):
-    return render(request, "game/userProfile.html")
+    return render(request, "game/profile.html")
