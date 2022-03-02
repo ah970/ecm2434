@@ -55,6 +55,16 @@ def register(request):
 
 
 def game(request):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            current_user = request.user
+            score = int(request.POST["score"])
+            current_player = Player.objects.get(user=current_user)
+            current_player.points += score
+            current_player.save()
+
+            return redirect("profile")
+
     event_list = Event.objects.all()
     event = choice(event_list)
 
