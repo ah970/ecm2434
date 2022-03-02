@@ -7,6 +7,10 @@ from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
 
 
+def test(request):
+    return render(request, "game/innerTemplate.html")
+
+
 def home(request):
     player_score_list = Player.objects.order_by("-points")[:10]
     context = {"player_score_list": player_score_list}
