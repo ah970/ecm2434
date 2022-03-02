@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,23 +11,23 @@
   <meta content="GPS Video Game" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/fireIcon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="{% static 'game/img/fireIcon.png' %}" rel="icon">
+  <link href="{% static 'game/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="{% static 'game/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'game/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="{% static 'game/css/style.css' %}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Arsha - v4.7.1
@@ -44,7 +45,7 @@
 
       <h1 class="logo me-auto"><a href="index.html">Hot & Cold</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      <!-- <a href="index.html" class="logo me-auto"><img src="{% static 'game/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar">
         <ul>
@@ -74,7 +75,7 @@
           </div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-          <img src="assets/img/gifFireIcon.png" class="img-fluid animated" alt="">
+		<img src="{% static 'game/img/gifFireIcon.png' %}" class="img-fluid animated" alt="">
         </div>
       </div>
     </div>
@@ -90,49 +91,17 @@
         <div class="row" data-aos="zoom-in">
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="assets/img/exeterUniIcon.jpg" class="img-fluid" alt="">
+		  <img src="{% static 'game/img/exeterUniIcon.jpg' %}" class="img-fluid" alt="">
           </div>
 
           <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="assets/img/exeterCityCouncil.png" class="img-fluid" alt="">
+		  <img src="{% static 'game/img/exeterCityCouncil.png' %}" class="img-fluid" alt="">
           </div>
 
         </div>
 
       </div>
     </section><!-- End Cliens Section -->
-
-    <!-- ======= Login Section ======= -->
-    <section id="about" class="about">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2>Login Below</h2>
-        </div>
-
-        <!-- <div class="row content">
-          <div class="col-lg-6">
-            <p>
-              This project was made for the group software development project in which we have devleoped using the latested google api technology to make a fun
-              and excisiting hot and cold gps location based game!
-            </p>
-            <ul>
-              <li><i class="ri-check-double-line"></i> Latest GPS technology</li>
-              <li><i class="ri-check-double-line"></i> Google API Technology</li>
-              <li><i class="ri-check-double-line"></i> Django Frontend Libraries</li>
-            </ul>
-          </div>
-          <div class="col-lg-6 pt-4 pt-lg-0">
-            <p>
-              This projet aims to be a fun next generation game developement project. Developed in a small team it aims to achieve the heights further then 
-              popular games such as among us and PUPG battle royale
-            </p>
-            <a href="https://localhost:8000/gameScreen" class="btn-learn-more">Play Now!</a>
-          </div>
-        </div> -->
-
-      </div>
-    </section><!-- End About Us Section -->
 
     <!-- ======= About Us Section ======= -->
     <section id="about" class="about">
@@ -165,6 +134,7 @@
 
       </div>
     </section><!-- End About Us Section -->
+
 
     <!-- ======= Cta Section ======= -->
     <section id="cta" class="cta">
@@ -247,16 +217,16 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="{% static 'game/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'game/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'game/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'game/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'game/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'game/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'game/vendor/php-email-form/validate.js' %}"></script>
 
   <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="{% static 'game/js/main.js' %}"></script>
 
 </body>
 
