@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
+from random import choice
 
 from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
@@ -50,7 +51,10 @@ def register(request):
 
 
 def game(request):
-    return render(request, "game/gameScreen.html", None)
+    event_list = Event.object.all()
+    event = choice(event_list)
+
+    return render(request, "game/gameScreen.html", {"event": event})
 
 
 def create_event(request):
