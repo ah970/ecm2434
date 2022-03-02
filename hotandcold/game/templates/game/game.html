@@ -116,6 +116,7 @@
         </div>
 
         <form id="scoreForm"method="post">
+		{% csrf_token %}
           <input type="hidden" id="score" name="score" value="1000">
         </form>
 
