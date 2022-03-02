@@ -23,12 +23,15 @@
     <!-- ENTRE JAVASCRIPT HERE-->
     <div class="global-leaderboard" style="border: outset black; position: fixed; top: 300px; right: 100px;">
         <h2>Global Leaderboard</h2>
-        <ul>
-            <li>Player....</li>
-            <li>Player....</li>
-            <li>Player....</li>
-            <li>Player....</li>
-        </ul>
+        <ol>
+		{% for player in player_score_list %}
+			{% if not player.is_game_master %}
+			<li>Player: {{ player.user.username }} ({{ player.points }} points)</li>
+			{% endif %}
+		{% empty %}
+			<li>No players found</li>
+		{% endfor %}
+        </ol>
     </div>
     
     

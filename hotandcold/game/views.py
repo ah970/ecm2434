@@ -7,7 +7,9 @@ from .forms import UserRegistrationForm, EventCreationForm
 
 
 def home(request):
-    return render(request, "game/home.html", None)
+    player_score_list = Player.objects.order_by("-points")[:10]
+    context = {"player_score_list": player_score_list}
+    return render(request, "game/home.html", context)
 
 
 def log_in(request):
