@@ -52,8 +52,8 @@ def game(request):
 
 
 def create_event(request):
-    form = EventCreationForm
-    return render(request, "game/temp/create_event.html", {"form": form})
+    form = EventCreationForm()
+    return render(request, "game/eventCreation.html", {"form": form})
 
 
 def profile(request):
