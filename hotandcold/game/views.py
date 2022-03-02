@@ -31,7 +31,7 @@ def log_in(request):
                 return redirect("home")
 
     form = AuthenticationForm()
-    return render(request, "game/loginScreen.html", {"form": form})
+    return render(request, "game/login.html", {"form": form})
 
 
 def log_out(request):
@@ -58,7 +58,7 @@ def game(request):
     event_list = Event.object.all()
     event = choice(event_list)
 
-    return render(request, "game/gameScreen.html", {"event": event})
+    return render(request, "game/game.html", {"event": event})
 
 
 def create_event(request):
