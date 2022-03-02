@@ -186,11 +186,11 @@
           document.getElementById("color_button").innerHTML=degrees + ' degrees';
 
           //reduce player's score by 10% every time they click the button
-          let score = document.getElementById("hiddenForm").value;
-          console.log("score before click: " + document.getElementById("hiddenForm").value);
+          let score = document.getElementById("scoreForm").value;
+          console.log("score before click: " + document.getElementById("scoreForm").value);
           score -= score * 0.1;
-          document.getElementById("hiddenForm").value = score;
-          console.log("score after click: " + document.getElementById("hiddenForm").value);
+          document.getElementById("scoreForm").value = score;
+          console.log("score after click: " + document.getElementById("scoreForm").value);
 
 
           if (degrees > 96) {
