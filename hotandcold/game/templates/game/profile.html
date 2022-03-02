@@ -72,9 +72,9 @@
 
         <ol>
           <li><a href="index.html">Home</a></li>
-          <li>Account Creation</li>
+          <li>Profile</li>
         </ol>
-        <h2>Account Creation</h2>
+        <h2>Profile</h2>
 
       </div>
     </section><!-- End Breadcrumbs -->
@@ -82,9 +82,18 @@
     <!-- Inner page code goes here.... -->
     <section class="inner-page">
       <div class="container">
-        <p>
-          Example inner page template
-        </p>
+        {% if user.is_authenticated %}
+          <p>User: {{ user.username }}</p>
+          <p>Email: {{ user.email }}</p>
+          {% if user.player.is_game_master %}
+            <p>Status: Game master</p>
+          {% else %}
+            <p>Status: Player</p>
+            <p>Points: {{ user.player.points }}</p>
+          {% endif %}
+        {% else %}
+          <p>You are not logged in</p>
+        {% endif %}
       </div>
     </section>
 

@@ -72,9 +72,9 @@
 
         <ol>
           <li><a href="index.html">Home</a></li>
-          <li>Account Creation</li>
+          <li>Login</li>
         </ol>
-        <h2>Account Creation</h2>
+        <h2>Login</h2>
 
       </div>
     </section><!-- End Breadcrumbs -->
@@ -82,9 +82,12 @@
     <!-- Inner page code goes here.... -->
     <section class="inner-page">
       <div class="container">
-        <p>
-          Example inner page template
-        </p>
+        <form method="POST">
+          {% csrf_token %}
+          {{ form }}
+        
+          <button type="submit">Log in</button>
+        </form>
       </div>
     </section>
 

@@ -80,11 +80,15 @@
     </section><!-- End Breadcrumbs -->
 
     <!-- Inner page code goes here.... -->
-    <section class="inner-page">
+    <section class="inner-page centerAllign">
       <div class="container">
-        <p>
-          Example inner page template
-        </p>
+        <!-- Inner code, form goes here -->
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p}}
+        
+          <button type="submit">Submit</button>
+        </form>		
       </div>
     </section>
 

@@ -55,7 +55,7 @@ def register(request):
 
 
 def game(request):
-    event_list = Event.object.all()
+    event_list = Event.objects.all()
     event = choice(event_list)
 
     return render(request, "game/game.html", {"event": event})
