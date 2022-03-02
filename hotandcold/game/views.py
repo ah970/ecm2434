@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 
-from .models import Player
+from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
 
 
@@ -38,8 +38,8 @@ def register(request):
 
         if form.is_valid():
             user = form.save()
-            p = Player(user=user)
-            p.save()
+            player = Player(user=user)
+            player.save()
             login(request, user)
             return redirect("home")
 
@@ -52,6 +52,23 @@ def game(request):
 
 
 def create_event(request):
+    if request.method == "POST":
+        form = EventCreationForm(request.POST)
+
+        if form.is_valid():
+            title = form.cleaned_data.get("title")
+            description = form.cleaned_data.get("description")
+            start = form.cleaned_data.get("start")
+            end = form.cleaned_data.get("end")
+            latitude = form.cleaned_data.get("latitude")
+            longitude = form.cleaned_data.get("longitude")
+
+            event = Event(title=title, description=description,
+                    start=start, end=end, latitude=latitude, longitude=longitude)
+            event.save()
+
+            return redirect("create event")
+
     form = EventCreationForm()
     return render(request, "game/eventCreation.html", {"form": form})
 
