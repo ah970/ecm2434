@@ -86,10 +86,14 @@
 
     <!-- Sidebar -->
     <div class="sidenav">
-        <a href="/">Home</a>
-        <a href="/profile/">Profile</a>
-        <a href="/game/">Game</a>
-        <a href="/login/">Logout</a>
+	    <a href="{% url 'home' %}">Home</a>
+	    <a href="{% url 'profile' %}">Profile</a>
+	    <a href="{% url 'game' %}">Game</a>
+	    {% if user.is_authenticated %}
+		    <a href="{% url 'log_out' %}">Logout</a>
+	    {% else %}
+	    	    <a href="{% url 'log_in' %}">Login</a>
+	    {% endif %}
     </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
