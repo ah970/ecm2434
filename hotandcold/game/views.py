@@ -1,13 +1,16 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
+from random import choice
 
-from .models import Player
+from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
 
 
 def home(request):
-    return render(request, "game/home.html", None)
+    player_score_list = Player.objects.order_by("-points")[:10]
+    context = {"player_score_list": player_score_list}
+    return render(request, "game/home.html", context)
 
 
 def log_in(request):
@@ -38,8 +41,8 @@ def register(request):
 
         if form.is_valid():
             user = form.save()
-            p = Player(user=user)
-            p.save()
+            player = Player(user=user)
+            player.save()
             login(request, user)
             return redirect("home")
 
@@ -48,12 +51,32 @@ def register(request):
 
 
 def game(request):
-    return render(request, "game/gameScreen.html", None)
+    event_list = Event.object.all()
+    event = choice(event_list)
+
+    return render(request, "game/gameScreen.html", {"event": event})
 
 
 def create_event(request):
-    form = EventCreationForm
-    return render(request, "game/temp/create_event.html", {"form": form})
+    if request.method == "POST":
+        form = EventCreationForm(request.POST)
+
+        if form.is_valid():
+            title = form.cleaned_data.get("title")
+            description = form.cleaned_data.get("description")
+            start = form.cleaned_data.get("start")
+            end = form.cleaned_data.get("end")
+            latitude = form.cleaned_data.get("latitude")
+            longitude = form.cleaned_data.get("longitude")
+
+            event = Event(title=title, description=description,
+                    start=start, end=end, latitude=latitude, longitude=longitude)
+            event.save()
+
+            return redirect("create event")
+
+    form = EventCreationForm()
+    return render(request, "game/eventCreation.html", {"form": form})
 
 
 def profile(request):
