@@ -116,8 +116,8 @@
         </div>
 
         <form id="scoreForm"method="post">
-		{% csrf_token %}
-          <input type="hidden" id="score" name="score" value="1000">
+		      {% csrf_token %}
+          <input type="hidden" id="score" name="score" value="1000" type="number">
         </form>
 
         <!-- Javascript to change button -->
@@ -187,11 +187,11 @@
           document.getElementById("color_button").innerHTML=degrees + ' degrees';
 
           //reduce player's score by 10% every time they click the button
-          let score = document.getElementById("scoreForm").value;
-          console.log("score before click: " + document.getElementById("scoreForm").value);
+          let score = document.getElementById("score").value;
+          console.log("score before click: " + document.getElementById("score").value);
           score -= score * 0.1;
-          document.getElementById("scoreForm").value = score;
-          console.log("score after click: " + document.getElementById("scoreForm").value);
+          document.getElementById("score").value = score;
+          console.log("score after click: " + document.getElementById("score").value);
 
 
           if (degrees > 96) {
