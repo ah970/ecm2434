@@ -8,7 +8,7 @@ from .forms import UserRegistrationForm, EventCreationForm
 
 
 def test(request):
-    return render(request, "game/innerTemplate.html")
+    return render(request, "game/extended.html", {"title": "Extended Page"})
 
 
 def home(request):
@@ -18,6 +18,8 @@ def home(request):
 
 
 def log_in(request):
+    title = "Login"
+
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
 
@@ -31,7 +33,7 @@ def log_in(request):
                 return redirect("home")
 
     form = AuthenticationForm()
-    return render(request, "game/login.html", {"form": form})
+    return render(request, "game/login.html", {"form": form, "title": title})
 
 
 def log_out(request):
@@ -40,6 +42,8 @@ def log_out(request):
 
 
 def register(request):
+    title = "Account Creation"
+
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
 
@@ -51,10 +55,12 @@ def register(request):
             return redirect("home")
 
     form = UserRegistrationForm()
-    return render(request, "game/accountCreation.html", {"form": form})
+    return render(request, "game/register.html", {"form": form, "title": title})
 
 
 def game(request):
+    title = "Game"
+
     if request.method == "POST":
         if request.user.is_authenticated:
             current_user = request.user
@@ -68,10 +74,12 @@ def game(request):
     event_list = Event.objects.all()
     event = choice(event_list)
 
-    return render(request, "game/game.html", {"event": event})
+    return render(request, "game/game.html", {"event": event, "title": title})
 
 
 def create_event(request):
+    title = "Create Event"
+
     if request.method == "POST":
         form = EventCreationForm(request.POST)
 
@@ -90,8 +98,9 @@ def create_event(request):
             return redirect("create event")
 
     form = EventCreationForm()
-    return render(request, "game/create_event.html", {"form": form})
+    return render(request, "game/create_event.html", {"form": form, "title": title})
 
 
 def profile(request):
-    return render(request, "game/profile.html")
+    title = "Profile"
+    return render(request, "game/profile.html", {"title": title})

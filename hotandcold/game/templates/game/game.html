@@ -1,279 +1,151 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends "game/base.html" %}
 
-  <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  
-    <title>Hot and Cold Game</title>
-    <meta content="Hot and cold group software project game" name="description">
-    <meta content="GPS Video Game" name="keywords">
-  
-    <!-- Favicons -->
-    <link href="{% static 'game/img/fireIcon.png' %}" rel="icon">
-    <link href="{% static 'game/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
-  
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-  
-    <!-- Vendor CSS Files -->
-    <link href="{% static 'game/vendor/aos/aos.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
-    <link href="{% static 'game/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-  
-    <!-- Template Main CSS File -->
-    <link href="{% static 'game/css/style.css' %}" rel="stylesheet">
-  
-    <!-- =======================================================
-    * Template Name: Arsha - v4.7.1
-    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
-  </head>
-
-<body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top header-inner-pages">
-    <div class="container d-flex align-items-center">
-
-	    <h1 class="logo me-auto"><a href="{% url 'home' %}">Hot & Cold</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-	      <!-- <a href="index.html" class="logo me-auto"><img src="{% static 'game/img/logo.png' %}" alt="" class="img-fluid"></a>-->
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <ul>
-            <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
-            <!-- <li><a class="nav-link scrollto active" href="#hero">Home</a></li> -->
-            <li><a class="nav-link scrollto" href="{% url 'login' %}">Login</a></li>
-            <li><a class="nav-link scrollto" href="{% url 'register' %}">Account Creation</a></li>
-            <li><a class="nav-link   scrollto" href="{% url 'profile' %}">Profile</a></li>
-            <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>
-          </ul>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-
-  <main id="main">
-
-    <!-- ======= Breadcrumbs ======= -->
-    <section id="breadcrumbs" class="breadcrumbs">
-      <div class="container">
-
-        <ol>
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li>Game</li>
-        </ol>
-        <h2>Game</h2>
-
-      </div>
-    </section><!-- End Breadcrumbs -->
-
+{% block content %}
+{% if user.is_authenticated %}
 <style>
 .textInputCenter{
-      text-align: center;
-    }
+text-align: center;
+}
 
-    .bottomScreenButtons{
-      padding-left: 50px;
-    }
+.bottomScreenButtons{
+padding-left: 50px;
+}
 
-    /* Code to make the button round */
-    .button {
-      background-color: #11f8a3; /* Green */
-      border: none;
-      color: white;
-      padding: 100px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
+/* Code to make the button round */
+.button {
+background-color: #11f8a3; /* Green */
+border: none;
+color: white;
+padding: 100px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+}
 
-    .button5 {
-      border-radius: 50%;
-      
-    }
+.button5 {
+border-radius: 50%;
+}
 </style>
-    <!-- Inner page code goes here.... -->
-    <section class="inner-page">
-      <div class="container">
-        <!-- Center of screen -->
-        <div class="textInputCenter">
-          <button id="color_button"class="button button5" onclick="getLocation()">click here</button>
-        </div>
 
-        <form id="scoreForm"method="post">
-		      {% csrf_token %}
-          <input type="hidden" id="score" name="score" value="1000" type="number">
-        </form>
+<div class="textInputCenter">
+  <button id="color_button"class="button button5" onclick="getLocation()">click here</button>
+</div>
 
-        <!-- Javascript to change button -->
-        <script>
-        //document.getElementById("demo").outerHTML= "NEW TEXT";
+<form id="scoreForm"method="post">
+  {% csrf_token %}
+  <input type="hidden" id="score" name="score" value="1000" type="number">
+</form>
+
+<!-- Javascript to change button -->
+<script>
+//document.getElementById("demo").outerHTML= "NEW TEXT";
+
+function getLocation() {
+  if (navigator.geolocation) {
+  //if successful, redirect to showPosition
+  //if not, redirect to showError
+    navigator.geolocation.getCurrentPosition(updateButton, showError);
+  } else {
+    div.innerHTML = "The Browser Does not Support Geolocation";
+  }
+}
+
+/*RETURNS the 'degrees' score for the player based on their distance from destination
+and the size of the playing area */
+function calcDegrees(distance, diameter) {
+  if (distance > diameter) {
+    return 0;
+  } else {
+    return 100 - ((distance / diameter) * 100);
+  }
+}
+
+//changes the colour of the button based on the user's current GPS coordinates
+function updateButton(position) {
+  //TODO fetch destination coordinates from database - hardcoded to harrison building for now
+  //let dest_lat = 50.737220; 
+  //let dest_lng = -3.532380;
+  
+  let dest_lat = {{ event.latitude }};
+  let dest_lng = {{ event.longitude }};
+
+  /*This is the size of the playing area - hardcoded to 1km for uni campus for now
+  Simply for possible scalability in the future */
+  let game_bound = 1000;
+
+  //calculate distance between current gps coordinates and destination coordinates
+  let distance = calcDistance(position.coords.latitude,position.coords.longitude,dest_lat,dest_lng);
+  //DEBUG ONLY
+  //distance = 35;    
+  
+  //calculate degrees score based on distance from destination
+  let degrees = calcDegrees(distance, game_bound);
+
+
+  //decide which colour to make the button based on the degrees score
+  if (degrees < 10) {document.getElementById("color_button").style.backgroundColor='#0010ff'} else
+  if (degrees < 20) {document.getElementById("color_button").style.backgroundColor='#0071ff'} else
+  if (degrees < 30) {document.getElementById("color_button").style.backgroundColor='#0090ff'} else
+  if (degrees < 40) {document.getElementById("color_button").style.backgroundColor='#00ffdc'} else
+  if (degrees < 50) {document.getElementById("color_button").style.backgroundColor='#c4ff00'} else
+  if (degrees < 60) {document.getElementById("color_button").style.backgroundColor='#ecff00'} else
+  if (degrees < 70) {document.getElementById("color_button").style.backgroundColor='#ffbe00'} else
+  if (degrees < 80) {document.getElementById("color_button").style.backgroundColor='#ff8000'} else
+  if (degrees < 90) {document.getElementById("color_button").style.backgroundColor='#ff3e00'} else
+  {document.getElementById("color_button").style.backgroundColor='#ff0000'}
+
+  document.getElementById("color_button").innerHTML=degrees + ' degrees';
+
+  //reduce player's score by 10% every time they click the button
+  let score = document.getElementById("score").value;
+  console.log("score before click: " + document.getElementById("score").value);
+  score -= Math.round(score * 0.1);
+  document.getElementById("score").value = score;
+  console.log("score after click: " + document.getElementById("score").value);
+
+  if (degrees > 96) {
+    document.getElementById("scoreForm").submit();
+  }
+}
+
+//calculates the distance between 2 GPS coordinates
+function calcDistance(lat1,lng1,lat2,lng2){
+
+  //convert coordinates to radians
+  lat1 = lat1*Math.PI / 180;
+  lng1 = lng1*Math.PI / 180;
+  lat2 = lat2*Math.PI / 180;
+  lng2 = lng2*Math.PI / 180;
+
+
+  //this calculation is just nicked from the internet
+  //apparently: "Distance d = 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]"
+  let dlng = lng2 - lng1;
+  let dlat = lat2 - lat1;
+  let a = Math.pow(Math.sin(dlat / 2), 2)
+          + Math.cos(lat1) * Math.cos(lat2)
+          * Math.pow(Math.sin(dlng / 2),2);
         
-        function getLocation() {
-              if (navigator.geolocation) {
-                //if successful, redirect to showPosition
-                //if not, redirect to showError
-                navigator.geolocation.getCurrentPosition(updateButton, showError);
-              } else {
-                div.innerHTML = "The Browser Does not Support Geolocation";
-              }
-            }
+  let c = 2 * Math.asin(Math.sqrt(a));
+  let r = 6371 //radius of earth in kilometres
 
+  //calculate result
+  return Math.round((c*r)*1000);
 
-        /*RETURNS the 'degrees' score for the player based on their distance from destination
-        and the size of the playing area */
-        function calcDegrees(distance, diameter) {
-          if (distance > diameter) {
-            return 0;
-          } else {
-            return 100 - ((distance / diameter) * 100);
-          }
+  }
 
-        }
-
-        //changes the colour of the button based on the user's current GPS coordinates
-        function updateButton(position) {
-
-
-          
-          //TODO fetch destination coordinates from database - hardcoded to harrison building for now
-          let dest_lat = 50.737220; 
-          let dest_lng = -3.532380;
-          
-          //let dest_lat = {{ event.latitude }};
-          //let dest_lng = {{ event.longitude }};
-
-
-          /*This is the size of the playing area - hardcoded to 1km for uni campus for now
-          Simply for possible scalability in the future */
-          let game_bound = 1000;
-
-          //calculate distance between current gps coordinates and destination coordinates
-          let distance = calcDistance(position.coords.latitude,position.coords.longitude,dest_lat,dest_lng);
-          //DEBUG ONLY
-          //distance = 35;    
-          
-          //calculate degrees score based on distance from destination
-          let degrees = calcDegrees(distance, game_bound);
-
-
-          //decide which colour to make the button based on the degrees score
-          if (degrees < 10) {document.getElementById("color_button").style.backgroundColor='#0010ff'} else
-          if (degrees < 20) {document.getElementById("color_button").style.backgroundColor='#0071ff'} else
-          if (degrees < 30) {document.getElementById("color_button").style.backgroundColor='#0090ff'} else
-          if (degrees < 40) {document.getElementById("color_button").style.backgroundColor='#00ffdc'} else
-          if (degrees < 50) {document.getElementById("color_button").style.backgroundColor='#c4ff00'} else
-          if (degrees < 60) {document.getElementById("color_button").style.backgroundColor='#ecff00'} else
-          if (degrees < 70) {document.getElementById("color_button").style.backgroundColor='#ffbe00'} else
-          if (degrees < 80) {document.getElementById("color_button").style.backgroundColor='#ff8000'} else
-          if (degrees < 90) {document.getElementById("color_button").style.backgroundColor='#ff3e00'} else
-          {document.getElementById("color_button").style.backgroundColor='#ff0000'}
-
-          document.getElementById("color_button").innerHTML=degrees + ' degrees';
-
-          //reduce player's score by 10% every time they click the button
-          let score = document.getElementById("score").value;
-          console.log("score before click: " + document.getElementById("score").value);
-          score -= Math.round(score * 0.1);
-          document.getElementById("score").value = score;
-          console.log("score after click: " + document.getElementById("score").value);
-
-
-          if (degrees > 96) {
-            document.getElementById("scoreForm").submit();
-          }
-        }
-
-        //calculates the distance between 2 GPS coordinates
-        function calcDistance(lat1,lng1,lat2,lng2){
-
-          //convert coordinates to radians
-          lat1 = lat1*Math.PI / 180;
-          lng1 = lng1*Math.PI / 180;
-          lat2 = lat2*Math.PI / 180;
-          lng2 = lng2*Math.PI / 180;
-
-
-          //this calculation is just nicked from the internet
-          //apparently: "Distance d = 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]"
-          let dlng = lng2 - lng1;
-          let dlat = lat2 - lat1;
-          let a = Math.pow(Math.sin(dlat / 2), 2)
-                  + Math.cos(lat1) * Math.cos(lat2)
-                  * Math.pow(Math.sin(dlng / 2),2);
-                
-          let c = 2 * Math.asin(Math.sqrt(a));
-          let r = 6371 //radius of earth in kilometres
-
-          //calculate result
-          return Math.round((c*r)*1000);
-
-          }
-
-        //This is where we end up if the user clicks 'block' instead of 'accept' when the browser
-        //asks to use their location
-        function showError(error) {
-              if(error.PERMISSION_DENIED){
-                  document.write("Please allow location access in order to play the game.");
-              }
-        }
-
-        
-        </script>
-      </div>
-    </section>
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-
-
-    <div class="container footer-bottom clearfix">
-      <div class="copyright">
-        &copy; Copyright <strong><span>ExeterGroupSoftwareProject</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/ -->
-        Inspired by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
-
-  <div id="preloader"></div>
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="{% static 'game/vendor/aos/aos.js' %}"></script>
-  <script src="{% static 'game/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'game/vendor/glightbox/js/glightbox.min.js' %}"></script>
-  <script src="{% static 'game/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-  <script src="{% static 'game/vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <script src="{% static 'game/vendor/waypoints/noframework.waypoints.js' %}"></script>
-  <script src="{% static 'game/vendor/php-email-form/validate.js' %}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'game/js/main.js' %}"></script>
-
-</body>
-
-</html>
+//This is where we end up if the user clicks 'block' instead of 'accept' when the browser
+//asks to use their location
+function showError(error) {
+  if(error.PERMISSION_DENIED){
+    document.write("Please allow location access in order to play the game.");
+  }
+}
+</script>
+{% else %}
+<p>You are not logged in.<p>
+{% endif %}
+{% endblock %}

@@ -3,8 +3,8 @@
 {% block content %}
 <form method="POST">
   {% csrf_token %}
-  {{ form.as_p }}
+  {{ form.as_p}}
 
-  <button type="submit">Log in</button>
+  <button type="submit">Submit</button>
 </form>
 {% endblock %}
