@@ -59,6 +59,8 @@ def register(request):
 
 
 def game(request):
+    title = "Game"
+
     if request.method == "POST":
         if request.user.is_authenticated:
             current_user = request.user
@@ -72,7 +74,7 @@ def game(request):
     event_list = Event.objects.all()
     event = choice(event_list)
 
-    return render(request, "game/game.html", {"event": event})
+    return render(request, "game/game.html", {"event": event, "title": title})
 
 
 def create_event(request):
