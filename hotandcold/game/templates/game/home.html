@@ -43,7 +43,7 @@
   <header id="header" class="fixed-top ">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="{% url '' %}">Hot & Cold</a></h1>
+      <h1 class="logo me-auto"><a href="{% url 'home' %}">Hot & Cold</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="{% static 'game/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -71,7 +71,7 @@
           <h1>Best Hot & Cold game made with latest GPS technology</h1>
           <h2>We are a talented group of Computer Science students from the University of Exeter.</h2>
           <div class="d-flex justify-content-center justify-content-lg-start">
-            <a href="{% url 'game' %}game" class="btn-get-started scrollto">Play Game</a>
+            <a href="{% url 'game' %}" class="btn-get-started scrollto">Play Game</a>
           </div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
@@ -128,7 +128,7 @@
               This project aims to be a fun next generation game developement project. Developed in a small team, it aims to achieve the heights further than 
               popular games such as "Among Us" and "PUBG battle royale"
             </p>
-            <a href="{% url '' %}game" class="btn-learn-more">Play Now!</a>
+            <a href="{% url 'game' %}" class="btn-learn-more">Play Now!</a>
           </div>
         </div>
 
@@ -146,7 +146,7 @@
             <p>For a limited time now you are able to create an account FOR FREE and can login to be apart of our beta test for our hot and cold game.</p>
           </div>
           <div class="col-lg-3 cta-btn-container text-center">
-            <a class="cta-btn align-middle" href="{% url 'register' %}register">Create an Account</a>
+            <a class="cta-btn align-middle" href="{% url 'register' %}">Create an Account</a>
           </div>
         </div>
 
