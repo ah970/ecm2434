@@ -19,6 +19,7 @@ def home(request):
 
 def log_in(request):
     title = "Login"
+
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
 
@@ -41,6 +42,8 @@ def log_out(request):
 
 
 def register(request):
+    title = "Account Creation"
+
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
 
@@ -52,7 +55,7 @@ def register(request):
             return redirect("home")
 
     form = UserRegistrationForm()
-    return render(request, "game/accountCreation.html", {"form": form})
+    return render(request, "game/register.html", {"form": form, "title": title})
 
 
 def game(request):
