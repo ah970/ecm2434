@@ -94,4 +94,5 @@ def create_event(request):
 
 
 def profile(request):
-    return render(request, "game/profile.html")
+    title = "Profile"
+    return render(request, "game/profile.html", {"title": title})
