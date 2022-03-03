@@ -8,7 +8,7 @@ from .forms import UserRegistrationForm, EventCreationForm
 
 
 def test(request):
-    return render(request, "game/innerTemplate.html")
+    return render(request, "game/extended.html", {"title": "Extended Page"})
 
 
 def home(request):
