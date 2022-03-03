@@ -1,6 +1,7 @@
 {% extends "game/base.html" %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <style>
 .textInputCenter{
 text-align: center;
@@ -28,6 +29,7 @@ cursor: pointer;
 border-radius: 50%;
 }
 </style>
+
 <div class="textInputCenter">
   <button id="color_button"class="button button5" onclick="getLocation()">click here</button>
 </div>
@@ -64,11 +66,11 @@ function calcDegrees(distance, diameter) {
 //changes the colour of the button based on the user's current GPS coordinates
 function updateButton(position) {
   //TODO fetch destination coordinates from database - hardcoded to harrison building for now
-  let dest_lat = 50.737220; 
-  let dest_lng = -3.532380;
+  //let dest_lat = 50.737220; 
+  //let dest_lng = -3.532380;
   
-  //let dest_lat = {{ event.latitude }};
-  //let dest_lng = {{ event.longitude }};
+  let dest_lat = {{ event.latitude }};
+  let dest_lng = {{ event.longitude }};
 
   /*This is the size of the playing area - hardcoded to 1km for uni campus for now
   Simply for possible scalability in the future */
@@ -143,4 +145,7 @@ function showError(error) {
   }
 }
 </script>
+{% else %}
+<p>You are not logged in.<p>
+{% endif %}
 {% endblock %}
