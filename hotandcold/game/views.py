@@ -90,7 +90,7 @@ def create_event(request):
             return redirect("create event")
 
     form = EventCreationForm()
-    return render(request, "game/eventCreation.html", {"form": form})
+    return render(request, "game/create_event.html", {"form": form})
 
 
 def profile(request):
