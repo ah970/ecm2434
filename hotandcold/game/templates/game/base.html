@@ -41,7 +41,6 @@
         <!-- Navigation -->
         <nav id="navbar" class="navbar">
           <ul>
-          <ul>
             <li><a class="nav-link scrollto" href="{% url 'home' %}">Home</a></li>
 	    {% if user.is_authenticated %}
 	      {% if user.player.is_game_master %}
@@ -54,7 +53,6 @@
 	      <li><a class="nav-link scrollto" href="{% url 'register' %}">Account Creation</a></li>
               <li><a class="getstarted scrollto" href="{% url 'login' %}">Login</a></li>
 	    {% endif %}
-          </ul>
           </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
@@ -89,10 +87,10 @@
     <footer id="footer">
       <div class="container footer-bottom clearfix">
         <div class="copyright">
-          &copy; Copyright <strong><span>Arsha</span></strong>. All Rights Reserved
+          &copy; Copyright <strong><span>ExeterGroupSoftwareProject</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+          Inspiration from: <a href="https://bootstrapmade.com/">BootstrapMade</a>
         </div>
       </div>
       </footer>
