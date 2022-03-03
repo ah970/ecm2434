@@ -43,10 +43,17 @@
           <ul>
           <ul>
             <li><a class="nav-link scrollto" href="{% url 'home' %}">Home</a></li>
-            <li><a class="nav-link scrollto" href="{% url 'login' %}">Login</a></li>
-            <li><a class="nav-link scrollto" href="{% url 'register' %}">Account Creation</a></li>
-            <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
-            <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>
+	    {% if user.is_authenticated %}
+	      {% if user.player.is_game_master %}
+	        <li><a class="nav-link scrollto" href="{% url 'create event' %}">Create Event</a></li>
+	      {% endif %}
+              <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
+              <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>
+	    {% else %}
+	      <li><a class="nav-link scrollto" href="{% url 'register' %}">Account Creation</a></li>
+              <li><a class="getstarted scrollto" href="{% url 'login' %}">Login</a></li>
+	    {% endif %}
           </ul>
           </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
