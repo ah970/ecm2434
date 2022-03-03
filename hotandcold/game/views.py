@@ -76,6 +76,8 @@ def game(request):
 
 
 def create_event(request):
+    title = "Create Event"
+
     if request.method == "POST":
         form = EventCreationForm(request.POST)
 
@@ -94,7 +96,7 @@ def create_event(request):
             return redirect("create event")
 
     form = EventCreationForm()
-    return render(request, "game/create_event.html", {"form": form})
+    return render(request, "game/create_event.html", {"form": form, "title": title})
 
 
 def profile(request):
