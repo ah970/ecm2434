@@ -18,6 +18,7 @@ def home(request):
 
 
 def log_in(request):
+    title = "Login"
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
 
@@ -31,7 +32,7 @@ def log_in(request):
                 return redirect("home")
 
     form = AuthenticationForm()
-    return render(request, "game/login.html", {"form": form})
+    return render(request, "game/login.html", {"form": form, "title": title})
 
 
 def log_out(request):
