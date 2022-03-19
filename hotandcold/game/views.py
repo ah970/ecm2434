@@ -1,7 +1,12 @@
+"""Views used in game app.
+
+Handles actual functionality of different views.
+"""
+
+from random import choice
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
-from random import choice
 
 from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm

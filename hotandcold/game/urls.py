@@ -1,4 +1,4 @@
-"URL configuration for game app.
+"""URL configuration for game app.
 
 The `urlpatterns` list routes URLs to views.
 
