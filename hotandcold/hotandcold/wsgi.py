@@ -1,5 +1,4 @@
-"""
-WSGI config for hotandcold project.
+"""WSGI configuration for hotandcold project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
