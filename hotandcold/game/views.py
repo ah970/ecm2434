@@ -261,5 +261,6 @@ def leaderboard(request):
     """
     title = "Leaderboard"
 
-    score_list = Player.objects.order_by("-points")[:10]
-    return render(request, "game/leaderboard.html", context)
+    top_players_list = Player.objects.order_by("-points")[:10]
+    return render(request, "game/leaderboard.html",
+            {"top_players_list": top_players_list, "title": title})
