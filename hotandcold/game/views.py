@@ -246,3 +246,20 @@ def profile(request):
     """
     title = "Profile"
     return render(request, "game/profile.html", {"title": title})
+
+
+def leaderboard(request):
+    """Leaderboard view.
+
+    Display the top 10 players by total score.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "Leaderboard"
+
+    score_list = Player.objects.order_by("-points")[:10]
+    return render(request, "game/leaderboard.html", context)
