@@ -1,0 +1,9 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+<ol>
+{% for player in top_players_list %}
+  <li>Player: {{ player.user.username }} - Score: {{ player.points }}</li>
+{% endfor %}
+</ol>
+{% endblock %}
