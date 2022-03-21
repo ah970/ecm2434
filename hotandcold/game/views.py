@@ -4,6 +4,8 @@ Handles actual functionality of different views.
 """
 
 from random import choice
+
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
@@ -66,6 +68,9 @@ def log_in(request):
 
                 # Redirect to the home view.
                 return redirect("home")
+        else:
+            # Form invalid, show error message.
+            messages.warning(request, "Username/password incorrect!")
     
     # Create an empty login form and show it.
     form = AuthenticationForm()
@@ -122,6 +127,13 @@ def register(request):
             
             # Redirect to the home view.
             return redirect("home")
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correct the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
 
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
@@ -208,6 +220,13 @@ def create_event(request):
 
             # Redirect to the create event view.
             return redirect("create event")
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correct the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
 
     # Create an empty event creation form and show it.
     form = EventCreationForm()
