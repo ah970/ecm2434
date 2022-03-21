@@ -28,4 +28,5 @@ urlpatterns = [
     path("game/", views.game, name="game"),
     path("create_event/", views.create_event, name="create event"),
     path("profile/", views.profile, name="profile"),
+    path("leaderboard/", views.leaderboard, name="leaderboard"),
 ]
