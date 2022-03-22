@@ -30,4 +30,5 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
     path("events/", views.list_events, name="list events"),
+    path("events/<int:event_id>/", views.event_details, name="event details"),
 ]
