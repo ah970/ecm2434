@@ -264,6 +264,9 @@ def create_event(request):
                     start=start, end=end, latitude=latitude, longitude=longitude)
             event.save()
 
+            # Show message of success to user.
+            messages.success(request, "Event saved successfully!")
+
             # Redirect to the create event view.
             return redirect("create event")
         else:
@@ -318,10 +321,14 @@ def update_event(request, event_id):
             # Save the event.
             event.save()
 
+            # Show message of success to user.
+            messages.success(request, "Event updated successfully!")
+
+            # Redirect back to details page.
             return redirect("event details", event_id=event_id)
         else:
             # Form invalid, show generic error message.
-            messages.warning(request, "Please correc the errors below!")
+            messages.warning(request, "Please correct the errors below!")
 
             # Iterate through list of errors to show specific problems.
             for field, message in form.errors.items():
