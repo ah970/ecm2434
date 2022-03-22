@@ -372,6 +372,50 @@ def delete_event(request, event_id):
     # Redirect back to event list page.
     return redirect("list events")
 
+
+def list_treasure_chests(request):
+    """Treasure Chest list view.
+
+    Shows a list of all treasure chests.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "List Treasure Chests"
+
+    # Get list of treasure chests.
+    treasure_chests_list = TreasureChest.objects.all()
+
+    return render(request, "game/list_treasure_chests.html", {
+        "title": title,
+        "treasure_chests_list": treasure_chest_list,
+        })
+
+
+def treasure_chest_details(request, treasure_chest_id):
+    """Treasure Chest details view.
+
+    Shows details relating to a specific treasure chest.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id (int) - ID of the treasure chest to show.
+    """
+    # Get specific treasure chest.
+    treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
+
+    # Set title to include treasure chest name.
+    title = "List Treasure Chests: " + treasure_chest.name
+
+    return render(request, "game/treasure_chest_details.html", {
+        "title": title,
+        "treasure_chest": treasure_chest,
+        })
+
+
 def profile(request):
     """User profile view.
 
