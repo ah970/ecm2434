@@ -181,6 +181,28 @@ def game(request):
     return render(request, "game/game.html", {"event": event, "title": title})
 
 
+def list_events(request):
+    """List events view.
+
+    Shows a list of all events.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    title="List Events"
+
+    # Get list of events ordered by the end datetime.
+    events_list = Event.objects.order_by("end")
+
+    return render(request, "game/list_events.html", {
+        "title": title,
+        "events_list": events_list,
+        })
+
+
 def create_event(request):
     """Event creation view.
 
