@@ -301,7 +301,11 @@ def create_event(request):
 
     # Create an empty event creation form and show it.
     form = EventCreationForm()
-    return render(request, "game/create_event.html", {"form": form, "title": title})
+    return render(request, "game/modify_object.html", {
+        "form": form,
+        "title": title,
+        "modification": "Create",
+        "object_type": "Event"})
 
 
 def update_event(request, event_id):
@@ -369,10 +373,12 @@ def update_event(request, event_id):
         "latitude": event.latitude,
         "longitude": event.longitude,
         })
-    return render(request, "game/update_event.html", {
+    return render(request, "game/modify_object.html", {
         "title": title,
         "form": form,
-        "event": event})
+        "object": event,
+        "modification": "Update",
+        "object_type": "Event"})
 
 
 def delete_event(request, event_id):
@@ -508,9 +514,11 @@ def create_treasure_chest(request):
 
     # Create an empty treasure chest creation form and show it. 
     form = TreasureChestCreationForm()
-    return render(request, "game/create_treasure_chest.html", {
+    return render(request, "game/modify_object.html", {
         "title": title,
         "form": form,
+        "modification": "Create",
+        "object_type": "Treasure Chest",
         })
 
 
@@ -582,7 +590,9 @@ def update_treasure_chest(request, treasure_chest_id):
     return render(request, "game/update_treasure_chest.html", {
         "title": title,
         "form": form,
-        "treasure_chest": treasure_chest})
+        "object": treasure_chest,
+        "modification": "Update",
+        "object_type": "Treasure Chest"})
 
 
 def delete_treasure_chest(request, treasure_chest_id):
