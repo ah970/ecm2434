@@ -73,7 +73,7 @@ class Event(models.Model):
 
 
 class Participation(models.Model):
-    """Participation model
+    """Participation model.
 
     Used for matching Players to Events with a score.
 
@@ -84,3 +84,22 @@ class Participation(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
+
+
+class TreasureChest(models.Model):
+    """TreasureChest model.
+
+    Used for containing "treasure chests" which contain extra points. The
+    precision for location data is based on the maximum possible precision
+    available from Google Maps.
+
+    Model attributes:
+    name - Name of TreasureChest.
+    points - Number of points TreasureChest contains.
+    latitude - Latitude of TreasureChest location.
+    longitude - Longitude of TreasureChest location.
+    """
+    name = models.CharField(max_length=80)
+    points = models.IntegerField(default=100)
+    latitude = models.DecimalField(max_digits=22, decimal_places=16)
+    longitude = models.DecimalField(max_digits=22, decimal_places=16)
