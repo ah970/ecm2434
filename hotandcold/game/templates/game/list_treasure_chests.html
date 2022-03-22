@@ -1,0 +1,24 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+{% if treasure_chests_list %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for treasure_chest in treasure_chests_list %}
+        <tr>
+	  <th scope="row"><a href="{% url 'treasure chest details' treasure_chest.id %}">{{ treasure_chest.name }}</a></th>
+          <td>{{ treasure_chest.points }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No treasure chests.</p>
+{% endif %}
+{% endblock %}
