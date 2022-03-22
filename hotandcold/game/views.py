@@ -8,7 +8,7 @@ from random import choice
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
@@ -192,7 +192,7 @@ def list_events(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
-    title="List Events"
+    title = "List Events"
 
     # Get list of events ordered by the end datetime.
     events_list = Event.objects.order_by("end")
@@ -200,6 +200,30 @@ def list_events(request):
     return render(request, "game/list_events.html", {
         "title": title,
         "events_list": events_list,
+        })
+
+
+def event_details(request, event_id):
+    """Event details view.
+
+    Shows details relating to a specific event.
+
+    Arguments:
+    request - Django object containing request information.
+    event_id (int) - ID of the event to show.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get specific event.
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Set title to include event title.
+    title = "List Events: " + event.title
+
+    return render(request, "game/event_details.html", {
+        "title": title,
+        "event": event,
         })
 
 
