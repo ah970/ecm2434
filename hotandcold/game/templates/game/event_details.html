@@ -37,6 +37,7 @@
 
 {% if user.player.is_game_master %}
 <p><a href="{% url 'update event' event.id %}">Update event</a></p>
+<p><a href="{% url 'delete event' event.id %}">Delete event</a></p>
 {% endif %}
 
 <p><a href="{% url 'list events' %}">Back</a></p>
