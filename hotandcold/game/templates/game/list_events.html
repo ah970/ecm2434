@@ -8,14 +8,16 @@
         <th scope="col">Title</th>
         <th scope="col">Start</th>
         <th scope="col">End</th>
+        <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody>
       {% for event in events_list %}
         <tr>
-          <th scope="row">{{ event.title }}</th>
+	  <th scope="row"><a href="{% url 'event details' event.id %}">{{ event.title }}</a></th>
           <td>{{ event.start }}</td>
           <td>{{ event.end }}</td>
+          <td>{{ event.get_status }}</td>
         </tr>
       {% endfor %}
     </tbody>
