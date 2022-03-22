@@ -1,0 +1,26 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+{% if events_list %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events_list %}
+        <tr>
+          <th scope="row">{{ event.title }}</th>
+          <td>{{ event.start }}</td>
+          <td>{{ event.end }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No events.</p>
+{% endif %}
+{% endblock %}
