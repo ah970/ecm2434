@@ -30,8 +30,10 @@ class EventCreationForm(forms.Form):
     description = forms.CharField(label="Description", max_length=200)
 
     # Start/end datetime fields.
-    start = forms.DateTimeField(label="Start")
-    end = forms.DateTimeField(label="End")
+    start = forms.DateTimeField(label="Start",
+            widget=forms.DateTimeInput(attrs={"type": "datetime-local"}))
+    end = forms.DateTimeField(label="End",
+            widget=forms.DateTimeInput(attrs={"type": "datetime-local"}))
 
     # Latitude/longitude decimal fields.
     latitude = forms.DecimalField(label="Latitude", max_digits=22, decimal_places=16)
