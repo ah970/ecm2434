@@ -279,6 +279,69 @@ def create_event(request):
     return render(request, "game/create_event.html", {"form": form, "title": title})
 
 
+def update_event(request, event_id):
+    """Event update view.
+
+    If the request type is POST, update the event and redirect the user to the
+    events detail page. Otherwise, display the event creation form.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (create
+    event).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get specific event. 
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Set title to include event title.
+    title = "Update Event: " + event.title 
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = EventCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from the form and update the event.
+            event.title = form.cleaned_data.get("title")
+            event.description = form.cleaned_data.get("description")
+            event.start = form.cleaned_data.get("start")
+            event.end = form.cleaned_data.get("end")
+            event.latitude = form.cleaned_data.get("latitude")
+            event.longitude = form.cleaned_data.get("longitude")
+
+            # Save the event.
+            event.save()
+
+            return redirect("event details", event_id=event_id)
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correc the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
+
+    # Create a populated event creation form and show it.
+    form = EventCreationForm(initial={
+        "title": event.title,
+        "description": event.description,
+        "start": event.start,
+        "end": event.end,
+        "latitude": event.latitude,
+        "longitude": event.longitude,
+        })
+    return render(request, "game/update_event.html", {
+        "title": title,
+        "form": form,
+        "event": event})
+
+
 def profile(request):
     """User profile view.
 
