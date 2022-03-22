@@ -38,3 +38,19 @@ class EventCreationForm(forms.Form):
     # Latitude/longitude decimal fields.
     latitude = forms.DecimalField(label="Latitude", max_digits=22, decimal_places=16)
     longitude = forms.DecimalField(label="Longitude", max_digits=22, decimal_places=16)
+
+
+class TreasureChestCreationForm(forms.Form):
+    """TreasureChest creation form.
+
+    Used for creating treasure chests, inherits from normal Form.
+    """
+    # Name field.
+    name = forms.CharField(label="Name")
+
+    # Points field.
+    points = forms.IntegerField(label="Points")
+
+    # Latitude/longitude decimal fields.
+    latitude = forms.DecimalField(label="Latitude", max_digits=22, decimal_places=16)
+    longitude = forms.DecimalField(label="Longitude", max_digits=22, decimal_places=16)
