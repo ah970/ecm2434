@@ -36,7 +36,7 @@
     <header id="header" class="fixed-top header-inner-pages">
       <!-- Title -->
       <div class="container d-flex align-items-center">
-        <h1 class="logo me-auto"><a href="home">dExtination</a></h1>
+	<h1 class="logo me-auto"><a href="{% url 'home' %}">dExtination</a></h1>
         
         <!-- Navigation -->
         <nav id="navbar" class="navbar">
@@ -65,7 +65,7 @@
       <section id="breadcrumbs" class="breadcrumbs">
         <div class="container">
         <ol>
-          <li><a href="home">Home</a></li>
+	  <li><a href="{% url 'home' %}">Home</a></li>
 	  <li>{{ title }}</li>
         </ol>
 	<h2>{{ title }}</h2>
