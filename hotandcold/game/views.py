@@ -5,6 +5,7 @@ Handles actual functionality of different views.
 
 from random import choice
 
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -16,6 +17,24 @@ from .forms import UserRegistrationForm, EventCreationForm, TreasureChestCreatio
 
 def test(request):
     return render(request, "game/extended.html", {"title": "Extended Page"})
+
+def check_user_is_game_master(request):
+    """Check the privileges of the user.
+
+    Checks the user is authenticated and they are a game master. If they are
+    not, then send a HTTP 403 response.
+
+    Parameters:
+    request - Django object containing request information.
+
+    Returns:
+    None.
+    """
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    if not request.user.player.is_game_master:
+        raise PermissionDenied
 
 
 def home(request):
@@ -162,12 +181,11 @@ def game(request):
         if request.user.is_authenticated:
             # Get the score, user and player.
             score = int(request.POST["score"])
-            current_user = request.user
-            current_player = Player.objects.get(user=current_user)
+            player = Player.objects.get(user=request.user)
 
             # Increase the player score. 
-            current_player.points += score
-            current_player.save()
+            player.points += score
+            player.save()
 
             # Redirect to the profile view.
             return redirect("profile")
@@ -242,6 +260,10 @@ def create_event(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Set the title.
     title = "Create Event"
 
     # Check the request type.
@@ -298,6 +320,9 @@ def update_event(request, event_id):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
     # Get specific event. 
     event = get_object_or_404(Event, pk=event_id)
 
@@ -364,6 +389,9 @@ def delete_event(request, event_id):
     redirect - Django function to redirect the user to another view (list
     events).
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
     # Delete the object.
     Event.objects.filter(pk=event_id).delete()
 
@@ -385,6 +413,10 @@ def list_treasure_chests(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Set title.
     title = "List Treasure Chests"
 
     # Get list of treasure chests.
@@ -405,6 +437,9 @@ def treasure_chest_details(request, treasure_chest_id):
     request - Django object containing request information.
     treasure_chest_id (int) - ID of the treasure chest to show.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
     # Get specific treasure chest.
     treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
 
@@ -433,6 +468,11 @@ def create_treasure_chest(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+
+
     title = "Create Treasure Chest"
 
     # Check the request type.
@@ -491,6 +531,12 @@ def update_treasure_chest(request, treasure_chest_id):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+
+
+
     # Get specific treasure chest.
     treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
 
@@ -553,6 +599,11 @@ def delete_treasure_chest(request, treasure_chest_id):
     redirect - Django function to redirect the user to another view (list
     treasure chests).
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+
+
     # Delete the treasure chest.
     TreasureChest.objects.filter(pk=treasure_chest_id).delete()
 
