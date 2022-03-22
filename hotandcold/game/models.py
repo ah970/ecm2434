@@ -5,6 +5,7 @@ Used for creating and storing persistent structured data in the database.
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Player(models.Model):
@@ -43,6 +44,32 @@ class Event(models.Model):
     end = models.DateTimeField()
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     longitude = models.DecimalField(max_digits=22, decimal_places=16)
+
+    def get_status(self):
+        """Return a string status of the event.
+
+        The status has one of 3 values:
+        "Live" - the event is currently active.
+        "Past" - the event happened in the past.
+        "Future" - the event will occur in the future.
+    
+        Arugments:
+        self - Event object.
+    
+        Returns:
+        status (str) - status of Event.
+        """
+        # Get the current date and time.
+        current_datetime = timezone.now()
+
+        # Current date is before the start of the Event.
+        if current_datetime < self.start:
+            return "Future"
+        # Current date between start and end of the Event.
+        elif self.start <= current_datetime <= self.end:
+            return "Live"
+        else:
+            return "Past"
 
 
 class Participation(models.Model):

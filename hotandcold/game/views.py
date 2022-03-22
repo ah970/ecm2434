@@ -8,7 +8,7 @@ from random import choice
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from .models import Event, Player
 from .forms import UserRegistrationForm, EventCreationForm
@@ -181,6 +181,52 @@ def game(request):
     return render(request, "game/game.html", {"event": event, "title": title})
 
 
+def list_events(request):
+    """List events view.
+
+    Shows a list of all events.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "List Events"
+
+    # Get list of events ordered by the end datetime.
+    events_list = Event.objects.order_by("end")
+
+    return render(request, "game/list_events.html", {
+        "title": title,
+        "events_list": events_list,
+        })
+
+
+def event_details(request, event_id):
+    """Event details view.
+
+    Shows details relating to a specific event.
+
+    Arguments:
+    request - Django object containing request information.
+    event_id (int) - ID of the event to show.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get specific event.
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Set title to include event title.
+    title = "List Events: " + event.title
+
+    return render(request, "game/event_details.html", {
+        "title": title,
+        "event": event,
+        })
+
+
 def create_event(request):
     """Event creation view.
 
@@ -218,6 +264,9 @@ def create_event(request):
                     start=start, end=end, latitude=latitude, longitude=longitude)
             event.save()
 
+            # Show message of success to user.
+            messages.success(request, "Event saved successfully!")
+
             # Redirect to the create event view.
             return redirect("create event")
         else:
@@ -232,6 +281,96 @@ def create_event(request):
     form = EventCreationForm()
     return render(request, "game/create_event.html", {"form": form, "title": title})
 
+
+def update_event(request, event_id):
+    """Event update view.
+
+    If the request type is POST, update the event and redirect the user to the
+    events detail page. Otherwise, display the event creation form.
+
+    Arguments:
+    request - Django object containing request information.
+    event_id (int) - ID of Event to update.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (event
+    details).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get specific event. 
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Set title to include event title.
+    title = "Update Event: " + event.title 
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = EventCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from the form and update the event.
+            event.title = form.cleaned_data.get("title")
+            event.description = form.cleaned_data.get("description")
+            event.start = form.cleaned_data.get("start")
+            event.end = form.cleaned_data.get("end")
+            event.latitude = form.cleaned_data.get("latitude")
+            event.longitude = form.cleaned_data.get("longitude")
+
+            # Save the event.
+            event.save()
+
+            # Show message of success to user.
+            messages.success(request, "Event updated successfully!")
+
+            # Redirect back to details page.
+            return redirect("event details", event_id=event_id)
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correct the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
+
+    # Create a populated event creation form and show it.
+    form = EventCreationForm(initial={
+        "title": event.title,
+        "description": event.description,
+        "start": event.start,
+        "end": event.end,
+        "latitude": event.latitude,
+        "longitude": event.longitude,
+        })
+    return render(request, "game/update_event.html", {
+        "title": title,
+        "form": form,
+        "event": event})
+
+def delete_event(request, event_id):
+    """Event deletion view.
+
+    Delete the event specified by the event ID and redirect the user to the
+    events list.
+
+    Arguments:
+    request - Django object containing request information.
+    event_id (int) - ID of Event to delete.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    events).
+    """
+    # Delete the object.
+    Event.objects.filter(pk=event_id).delete()
+
+    # Display message informing the user object has been deleted.
+    messages.success(request, "Event " + str(event_id) + " deleted!")
+
+    # Redirect back to event list page.
+    return redirect("list events")
 
 def profile(request):
     """User profile view.
