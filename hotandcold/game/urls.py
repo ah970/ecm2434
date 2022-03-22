@@ -33,4 +33,11 @@ urlpatterns = [
     path("events/<int:event_id>/", views.event_details, name="event details"),
     path("events/<int:event_id>/update", views.update_event, name="update event"),
     path("events/<int:event_id>/delete", views.delete_event, name="delete event"),
+
+    # Treasure chest CRUD operations.
+    path("treasure_chests/", views.list_treasure_chests, name="list treasure chests"),
+    path("treasure_chests/<int:treasure_chest_id>/", views.treasure_chest_details, name="treasure chest details"),
+    path("treasure_chests/new/", views.create_treasure_chest, name="create treasure chest"),
+    path("treasure_chests/<int:treasure_chest_id>/update/", views.update_treasure_chest, name="update treasure chest"),
+    path("treasure_chests/<int:treasure_chest_id>/delete/", views.delete_treasure_chest, name="delete treasure chest"),
 ]

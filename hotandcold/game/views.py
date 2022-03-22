@@ -10,8 +10,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render, get_object_or_404
 
-from .models import Event, Player
-from .forms import UserRegistrationForm, EventCreationForm
+from .models import Event, Player, TreasureChest
+from .forms import UserRegistrationForm, EventCreationForm, TreasureChestCreationForm
 
 
 def test(request):
@@ -349,6 +349,7 @@ def update_event(request, event_id):
         "form": form,
         "event": event})
 
+
 def delete_event(request, event_id):
     """Event deletion view.
 
@@ -374,7 +375,7 @@ def delete_event(request, event_id):
 
 
 def list_treasure_chests(request):
-    """Treasure Chest list view.
+    """TreasureChest list view.
 
     Shows a list of all treasure chests.
 
@@ -391,12 +392,12 @@ def list_treasure_chests(request):
 
     return render(request, "game/list_treasure_chests.html", {
         "title": title,
-        "treasure_chests_list": treasure_chest_list,
+        "treasure_chests_list": treasure_chests_list,
         })
 
 
 def treasure_chest_details(request, treasure_chest_id):
-    """Treasure Chest details view.
+    """Treasure chest details view.
 
     Shows details relating to a specific treasure chest.
 
@@ -414,6 +415,152 @@ def treasure_chest_details(request, treasure_chest_id):
         "title": title,
         "treasure_chest": treasure_chest,
         })
+
+
+def create_treasure_chest(request):
+    """Treasure chest creation view.
+    
+    If the request type is POST, create the treasure chest and redirect the
+    user to the treasure chest list view. Otherwise, display the treasure
+    chest creation form.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    treasure chests).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "Create Treasure Chest"
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = TreasureChestCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from form.
+            name = form.cleaned_data.get("name")
+            points = form.cleaned_data.get("points")
+            latitude = form.cleaned_data.get("latitude")
+            longitude = form.cleaned_data.get("longitude")
+
+            # Create treasure chest with fields.
+            treasure_chest = TreasureChest(name=name, points=points,
+                    latitude=latitude, longitude=longitude)
+            treasure_chest.save()
+
+            # Show message of success to user.
+            messages.success(request, "Treasure chest created successfully!")
+
+            # Redirect to the create treasure chest view.
+            return redirect("create treasure chest")
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correct the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
+
+    # Create an empty treasure chest creation form and show it. 
+    form = TreasureChestCreationForm()
+    return render(request, "game/create_treasure_chest.html", {
+        "title": title,
+        "form": form,
+        })
+
+
+def update_treasure_chest(request, treasure_chest_id):
+    """Treasure chest update view.
+
+    If the request type is POST, update the treasure chest and redirect the
+    user to the treasure chest details page. Otherwise, display the treasure
+    chest creation form.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id (int) - ID of treasure chest to update.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (treasure
+    chest details).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get specific treasure chest.
+    treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
+
+    # Set title to include treasure chest name.
+    title = "Update Treasure Chest: " + treasure_chest.name
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = TreasureChestCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from the form and update the treasure chest.
+            treasure_chest.name = form.cleaned_data.get("name")
+            treasure_chest.points = form.cleaned_data.get("points")
+            treasure_chest.latitude = form.cleaned_data.get("latitude")
+            treasure_chest.longitude = form.cleaned_data.get("longitude")
+
+            # Save the treasure chest.
+            treasure_chest.save()
+
+            # Show message of success to user.
+            messages.success(request, "Treasure Chest updated successfully!")
+            
+            # Redirect back to details page.
+            return redirect("treasure chest details", treasure_chest_id=treasure_chest_id)
+        else:
+            # Form invalid, show generic error message.
+            messages.warning(request, "Please correct the errors below!")
+
+            # Iterate through list of errors to show specific problems.
+            for field, message in form.errors.items():
+                messages.warning(request, field + ": " + message[0])
+
+    # Create a populated treasure chest creation form and show it.
+    form = TreasureChestCreationForm(initial={
+        "name": treasure_chest.name,
+        "points": treasure_chest.points,
+        "latitude": treasure_chest.latitude,
+        "longitude": treasure_chest.longitude,
+        })
+    return render(request, "game/update_treasure_chest.html", {
+        "title": title,
+        "form": form,
+        "treasure_chest": treasure_chest})
+
+
+def delete_treasure_chest(request, treasure_chest_id):
+    """Treasure chest deletion view.
+
+    Delete the treasure specified by the treasure chest ID and redirect the
+    user to the treasure chest list.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id -  ID of treasure chest to delete.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    treasure chests).
+    """
+    # Delete the treasure chest.
+    TreasureChest.objects.filter(pk=treasure_chest_id).delete()
+
+    # Display message informing the user object has been deleted.
+    messages.success(request, "Treasure Chest " + str(treasure_chest_id) + " deleted!")
+    
+    # Redirect the user back to the treasure chest list page.
+    return redirect("list treasure chests")
 
 
 def profile(request):
