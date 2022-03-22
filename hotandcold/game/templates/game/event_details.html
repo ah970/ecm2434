@@ -34,5 +34,10 @@
     }
 </script>
 {% endif %}
+
+{% if user.player.is_game_master %}
+<p><a href="{% url 'update event' event.id %}">Update event</a></p>
+{% endif %}
+
 <p><a href="{% url 'list events' %}">Back</a></p>
 {% endblock %}
