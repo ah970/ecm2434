@@ -290,10 +290,11 @@ def update_event(request, event_id):
 
     Arguments:
     request - Django object containing request information.
+    event_id (int) - ID of Event to update.
 
     Returns:
-    redirect - Django function to redirect the user to another view (create
-    event).
+    redirect - Django function to redirect the user to another view (event
+    details).
     OR
     render - Django function to give a HTTP response with a template.
     """
@@ -348,6 +349,28 @@ def update_event(request, event_id):
         "form": form,
         "event": event})
 
+def delete_event(request, event_id):
+    """Event deletion view.
+
+    Delete the event specified by the event ID and redirect the user to the
+    events list.
+
+    Arguments:
+    request - Django object containing request information.
+    event_id (int) - ID of Event to delete.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    events).
+    """
+    # Delete the object.
+    Event.objects.filter(pk=event_id).delete()
+
+    # Display message informing the user object has been deleted.
+    messages.success(request, "Event " + str(event_id) + " deleted!")
+
+    # Redirect back to event list page.
+    return redirect("list events")
 
 def profile(request):
     """User profile view.
