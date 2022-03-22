@@ -5,7 +5,7 @@ Adds models to admin dashboard.
 
 from django.contrib import admin
 
-from .models import Player, Event, Participation
+from .models import Player, Event, Participation, TreasureChest
 
 
 # Add Player, Event and Participation models to the admin dashboard.
