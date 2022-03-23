@@ -94,14 +94,15 @@ def game(request, event_id):
             # Redirect to the profile view.
             return redirect("game over", participation_id=participation.id)
 
-    # Get list of treasure chests.
-    treasure_chest_list = TreasureChest.objects.get()
-
     # Get event and check if event is live.
     event = get_object_or_404(Event, pk=event_id)
     if not event.get_status() == "Live":
         # Event is not live, do not allow user to go further.
         raise PermissionDenied
+
+    # Create list of coordinates from treasure chests.
+    treasure_chest_list = [(t.latitude, t.longitude) for t in
+            TreasureChest.objects.get()]
 
     # Show the game.
     return render(request, "game/game.html", {"title": title, "event": event,
