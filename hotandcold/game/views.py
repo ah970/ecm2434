@@ -69,6 +69,7 @@ def game(request, event_id):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Set title.
     title = "Game"
 
     # Check the request type.
@@ -99,6 +100,28 @@ def game(request, event_id):
 
     # Show the game.
     return render(request, "game/game.html", {"event": event, "title": title})
+
+def game_over(request, participation_id):
+    """Game over view.
+
+    Show the users score at the end of a game.
+
+    Arguments:
+    request - Django object containing request information.
+    participation_id - ID of participation object to get.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Set title.
+    title = "Game Over"
+
+    # Get participation object.
+    participation = get_object_or_404(Participation, pk=participation_id)
+
+    # Show game over screen.
+    return render(request, "game/game_over.html", {"title": title,
+        "participation": participation})
 
 
 def leaderboard(request):
