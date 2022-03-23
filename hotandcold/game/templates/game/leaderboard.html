@@ -3,7 +3,7 @@
 {% block content %}
 <ol>
 {% for player in top_players_list %}
-  <li>Player: {{ player.user.username }} - Score: {{ player.points }}</li>
+<li><a href="{% url 'user' player.user.username %}">Player: {{ player.user.username }} - Score: {{ player.points }}</a></li>
 {% endfor %}
 </ol>
 {% endblock %}
