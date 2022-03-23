@@ -10,19 +10,17 @@ Using the IDE [VScode](https://code.visualstudio.com/)
 
 
 ## Getting Started
+*If your using python3 replace 'python' with 'python3'*
 1. Please acess the hot and cold folder
-2. Run manage.py with the command "python3 manage.py runserver"
-3. Follow the terminal instructions to connet to your website
+2. python manage.py makemigrations 
+3. python manage.py migrate 
+4. python manage.py createsuperuser 
+5. Go through command line steps to make superuser which is required by the database
+6. Run manage.py with the command "python3 manage.py runserver"
+7. Follow the terminal instructions to connet to your website
 
 
-
-## Steps to create a superuser
-*This step is needed if running it locally*
-1. python manage.py makemigrations 
-2. python manage.py migrate 
-3. python manage.py createsuperuser 
  
-
 ## Project Contents
 Found within the project src folder includes:
 * to be completed when project is finished
