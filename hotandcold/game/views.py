@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 
 from .models import Event, Player, TreasureChest
-from .forms import UserRegistrationForm, EventCreationForm, TreasureChestCreationForm
+from .forms import UserRegistrationForm, UserUpdateEmailForm, EventCreationForm, TreasureChestCreationForm
 
 
 def test(request):
@@ -175,6 +175,53 @@ def register(request):
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
     return render(request, "game/register.html", {"form": form, "title": title})
+
+
+def update_user_email(request):
+    """Update user view.
+
+    If the request type is POST and the user is logged in, update the users
+    email based on the form data and redirect back to the user profile view.
+    Otherwise, display the user update email form.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (profile).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Set title.
+    title = "Update Email"
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data and the logged in user.
+        form = UserUpdateEmailForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get user and email.
+            user = request.user
+            email = form.cleaned_data.get("email")
+            
+            # Save the new user details.
+            user.email = email
+            user.save()
+
+            # Show message of success to user.
+            messages.success(request, "User email updated successfully!")
+
+            # Redirect to the profile view.
+            return redirect("profile")
+        else:
+            # Show error messages.
+            display_error_messages(request, form)
+
+    # Create an empty update form and show it.
+    form = UserUpdateEmailForm()
+    return render(request, "game/update_user.html", {"title": title, "form": form})
 
 
 def user_details(request, username):
