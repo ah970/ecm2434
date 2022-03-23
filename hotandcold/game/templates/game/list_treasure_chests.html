@@ -1,6 +1,9 @@
 {% extends "game/base.html" %}
 
 {% block content %}
+
+<p><a href="{% url 'create treasure chest' %}">New Treasure Chest</a></p>
+
 {% if treasure_chests_list %}
   <table class="table">
     <thead>
@@ -19,6 +22,7 @@
     </tbody>
   </table>
 {% else %}
-  <p>No treasure chests.</p>
+  <p>No Treasure Chests.</p>
 {% endif %}
+
 {% endblock %}

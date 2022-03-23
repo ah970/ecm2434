@@ -1,12 +1,14 @@
 {% extends "game/base.html" %}
 
 {% block content %}
+
 <form method="POST">
   {% csrf_token %}
   {{ form.as_p }}
 
   <div id="map_canvas" style="width: auto; height: 400px;"></div>
   <br>
+
   <button type="submit">{{ modification }} {{ object_name }}</button>
 </form>
 
@@ -42,4 +44,5 @@ function initialize() {
   vMarker.setMap(map);
 }
 </script>
+
 {% endblock %}

@@ -1,6 +1,11 @@
 {% extends "game/base.html" %}
 
 {% block content %}
+
+{% if user.player.is_game_master %}
+  <p><a href="{% url 'create event' %}">New Event</a></p>
+{% endif %}
+
 {% if events_list %}
   <table class="table">
     <thead>
@@ -23,6 +28,7 @@
     </tbody>
   </table>
 {% else %}
-  <p>No events.</p>
+  <p>No Events.</p>
 {% endif %}
+
 {% endblock %}
