@@ -48,7 +48,7 @@
 	      {% endif %}
 	      <li><a class="nav-link scrollto" href="{% url 'list events' %}">Events</a></li>
 	      <li><a class="nav-link scrollto" href="{% url 'leaderboard' %}">Leaderboard</a></li>
-              <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="nav-link scrollto" href="{% url 'user' user.username %}">Profile</a></li>
               <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
               <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>
 	    {% else %}

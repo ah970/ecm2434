@@ -177,6 +177,33 @@ def register(request):
     return render(request, "game/register.html", {"form": form, "title": title})
 
 
+def user_details(request, username):
+    """User details view.
+
+    Show information about a specific user (given by username). Similar to the
+    user profile view but does not include links to change details.
+
+    Arguments:
+    request - Django object containing request information.
+    username (str) - username of user to view.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Check if user is logged in.
+    if not request.user.is_authenticated:
+        # User is not logged in, show HTTP 403.
+        raise PermissionDenied
+
+    # Get user by username.
+    user = get_object_or_404(User, username=username)
+
+    # Set title to include username.
+    title = "Profile: " + username
+
+    return render(request, "game/user.html", {"title": title, "show_user": user})
+
+
 def update_user_email(request):
     """Update user view.
 
@@ -192,6 +219,11 @@ def update_user_email(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if user is logged in.
+    if not request.user.is_authenticated:
+        # User is not logged in, show HTTP 403.
+        raise PermissionDenied
+
     # Set title.
     title = "Update Email"
 
@@ -214,7 +246,7 @@ def update_user_email(request):
             messages.success(request, "User email updated successfully!")
 
             # Redirect to the profile view.
-            return redirect("profile")
+            return redirect("user", username=user.username)
         else:
             # Show error messages.
             display_error_messages(request, form)
@@ -222,28 +254,6 @@ def update_user_email(request):
     # Create an empty update form and show it.
     form = UserUpdateEmailForm()
     return render(request, "game/update_user.html", {"title": title, "form": form})
-
-
-def user_details(request, username):
-    """User details view.
-
-    Show information about a specific user (given by username). Similar to the
-    user profile view but does not include links to change details.
-
-    Arguments:
-    request - Django object containing request information.
-    username (str) - username of user to view.
-
-    Returns:
-    render - Django function to give a HTTP response with a template.
-    """
-    # Get user by username.
-    user = get_object_or_404(User, username=username)
-
-    # Set title to include username.
-    title = "Profile: " + username
-
-    return render(request, "game/user.html", {"title": title, "user": user})
 
 
 def game(request):
@@ -689,21 +699,6 @@ def delete_treasure_chest(request, treasure_chest_id):
     
     # Redirect the user back to the treasure chest list page.
     return redirect("list treasure chests")
-
-
-def profile(request):
-    """User profile view.
-
-    Display the user.
-
-    Arguments:
-    request - Django object containing request information.
-
-    Returns:
-    render - Django function to give a HTTP response with a template.
-    """
-    title = "Profile"
-    return render(request, "game/profile.html", {"title": title})
 
 
 def leaderboard(request):
