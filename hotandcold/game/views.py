@@ -9,6 +9,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 
 from .models import Event, Player, TreasureChest
@@ -174,6 +175,28 @@ def register(request):
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
     return render(request, "game/register.html", {"form": form, "title": title})
+
+
+def user_details(request, username):
+    """User details view.
+
+    Show information about a specific user (given by username). Similar to the
+    user profile view but does not include links to change details.
+
+    Arguments:
+    request - Django object containing request information.
+    username (str) - username of user to view.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Get user by username.
+    user = get_object_or_404(User, username=username)
+
+    # Set title to include username.
+    title = "Profile: " + username
+
+    return render(request, "game/user.html", {"title": title, "user": user})
 
 
 def game(request):
