@@ -24,7 +24,7 @@ def check_user_is_game_master(request):
     Checks the user is authenticated and they are a game master. If they are
     not, then send a HTTP 403 response.
 
-    Parameters:
+    Arguments:
     request - Django object containing request information.
 
     Returns:
@@ -35,6 +35,27 @@ def check_user_is_game_master(request):
 
     if not request.user.player.is_game_master:
         raise PermissionDenied
+
+
+def display_error_messages(request, form):
+    """Display error messages from forms.
+
+    Iterates through all the errors in a form and displays each of them as a
+    new message.
+
+    Arguments:
+    request - Django object containing request information.
+    form - Django form to get errors from.
+
+    Returns:
+    None.
+    """
+    # Form invalid, show generic error message.
+    messages.warning(request, "Please correct the errors below!")
+
+    # Iterate through list of errors to show specific problems.
+    for field, message in form.errors.items():
+        messages.warning(request, field + ": " + message[0])
 
 
 def home(request):
@@ -147,12 +168,8 @@ def register(request):
             # Redirect to the home view.
             return redirect("home")
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
@@ -292,12 +309,9 @@ def create_event(request):
             # Redirect to the create event view.
             return redirect("create event")
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
+            # Show error messages.
+            display_error_messages(request, form)
 
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
 
     # Create an empty event creation form and show it.
     form = EventCreationForm()
@@ -357,12 +371,8 @@ def update_event(request, event_id):
             # Redirect back to details page.
             return redirect("event details", event_id=event_id)
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create a populated event creation form and show it.
     form = EventCreationForm(initial={
@@ -505,12 +515,8 @@ def create_treasure_chest(request):
             # Redirect to the create treasure chest view.
             return redirect("create treasure chest")
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create an empty treasure chest creation form and show it. 
     form = TreasureChestCreationForm()
@@ -542,9 +548,6 @@ def update_treasure_chest(request, treasure_chest_id):
     # Check if the user is a game master.
     check_user_is_game_master(request)
 
-
-
-
     # Get specific treasure chest.
     treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
 
@@ -573,12 +576,8 @@ def update_treasure_chest(request, treasure_chest_id):
             # Redirect back to details page.
             return redirect("treasure chest details", treasure_chest_id=treasure_chest_id)
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create a populated treasure chest creation form and show it.
     form = TreasureChestCreationForm(initial={
@@ -611,8 +610,6 @@ def delete_treasure_chest(request, treasure_chest_id):
     """
     # Check if the user is a game master.
     check_user_is_game_master(request)
-
-
 
     # Delete the treasure chest.
     TreasureChest.objects.filter(pk=treasure_chest_id).delete()
