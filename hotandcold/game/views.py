@@ -94,6 +94,9 @@ def game(request, event_id):
             # Redirect to the profile view.
             return redirect("game over", participation_id=participation.id)
 
+    # Get list of treasure chests.
+    treasure_chest_list = TreasureChest.objects.get()
+
     # Get event and check if event is live.
     event = get_object_or_404(Event, pk=event_id)
     if not event.get_status() == "Live":
@@ -101,7 +104,8 @@ def game(request, event_id):
         raise PermissionDenied
 
     # Show the game.
-    return render(request, "game/game.html", {"title": title, "event": event})
+    return render(request, "game/game.html", {"title": title, "event": event,
+        "treasure_chest_list": treasure_chest_list})
 
 
 @login_required(login_url="/login")
