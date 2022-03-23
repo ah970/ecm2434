@@ -1,0 +1,20 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+
+<p>User: {{ show_user.username }}</p>
+<p>Email: {{ show_user.email }}</p>
+
+{% if show_user.player.is_game_master %}
+  <p>Status: Game master</p>
+{% else %}
+  <p>Status: Player</p>
+{% endif %}
+
+<p>Points: {{ show_user.player.points }}</p>
+
+{% if user.username == show_user.username %}
+  <p><a href="{% url 'update user email' %}">Update Email</a></p>
+{% endif %}
+
+{% endblock %}

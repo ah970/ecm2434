@@ -14,13 +14,13 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("game/", views.game, name="game"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
-    path("test/", views.test, name="test"),
 
     # Users and authentication.
     path("login/", views.log_in, name="login"),
     path("logout/", views.log_out, name="logout"),
     path("register/", views.register, name="register"),
-    path("profile/", views.profile, name="profile"),
+    path("users/<str:username>/", views.user_details, name="user"),
+    path("update_email/", views.update_user_email, name="update user email"),
    
     # Event CRUD operations.
     path("events/", views.list_events, name="list events"),

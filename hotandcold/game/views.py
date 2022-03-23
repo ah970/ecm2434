@@ -9,53 +9,11 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 
 from .models import Event, Player, TreasureChest
-from .forms import UserRegistrationForm, EventCreationForm, TreasureChestCreationForm
-
-
-def test(request):
-    return render(request, "game/extended.html", {"title": "Extended Page"})
-
-def check_user_is_game_master(request):
-    """Check the privileges of the user.
-
-    Checks the user is authenticated and they are a game master. If they are
-    not, then send a HTTP 403 response.
-
-    Arguments:
-    request - Django object containing request information.
-
-    Returns:
-    None.
-    """
-    if not request.user.is_authenticated:
-        raise PermissionDenied
-
-    if not request.user.player.is_game_master:
-        raise PermissionDenied
-
-
-def display_error_messages(request, form):
-    """Display error messages from forms.
-
-    Iterates through all the errors in a form and displays each of them as a
-    new message.
-
-    Arguments:
-    request - Django object containing request information.
-    form - Django form to get errors from.
-
-    Returns:
-    None.
-    """
-    # Form invalid, show generic error message.
-    messages.warning(request, "Please correct the errors below!")
-
-    # Iterate through list of errors to show specific problems.
-    for field, message in form.errors.items():
-        messages.warning(request, field + ": " + message[0])
+from .forms import UserRegistrationForm, UserUpdateEmailForm, EventCreationForm, TreasureChestCreationForm
 
 
 def home(request):
@@ -72,6 +30,64 @@ def home(request):
     player_score_list = Player.objects.order_by("-points")[:10]
     context = {"player_score_list": player_score_list}
     return render(request, "game/home.html", context)
+
+
+def game(request):
+    """Game view.
+
+    If the request type is POST and the user is logged in, save the user score
+    and redirect the user to the profile page. Otherwise, display the game.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (profile).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "Game"
+
+    # Check the request type.
+    if request.method == "POST":
+        # Check if the user is logged in.
+        if request.user.is_authenticated:
+            # Get the score, user and player.
+            score = int(request.POST["score"])
+            player = Player.objects.get(user=request.user)
+
+            # Increase the player score. 
+            player.points += score
+            player.save()
+
+            # Redirect to the profile view.
+            return redirect("profile")
+
+    # Select a random event from the list of events and use that as the event
+    # the user partipates in.
+    event_list = Event.objects.all()
+    event = choice(event_list)
+
+    # Show the game.
+    return render(request, "game/game.html", {"event": event, "title": title})
+
+
+def leaderboard(request):
+    """Leaderboard view.
+
+    Display the top 10 players by total score.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    title = "Leaderboard"
+
+    top_players_list = Player.objects.order_by("-points")[:10]
+    return render(request, "game/leaderboard.html",
+            {"top_players_list": top_players_list, "title": title})
 
 
 def log_in(request):
@@ -176,11 +192,39 @@ def register(request):
     return render(request, "game/register.html", {"form": form, "title": title})
 
 
-def game(request):
-    """Game view.
+def user_details(request, username):
+    """User details view.
 
-    If the request type is POST and the user is logged in, save the user score
-    and redirect the user to the profile page. Otherwise, display the game.
+    Show information about a specific user (given by username). Similar to the
+    user profile view but does not include links to change details.
+
+    Arguments:
+    request - Django object containing request information.
+    username (str) - username of user to view.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Check if user is logged in.
+    if not request.user.is_authenticated:
+        # User is not logged in, show HTTP 403.
+        raise PermissionDenied
+
+    # Get user by username.
+    user = get_object_or_404(User, username=username)
+
+    # Set title to include username.
+    title = "Profile: " + username
+
+    return render(request, "game/user.html", {"title": title, "show_user": user})
+
+
+def update_user_email(request):
+    """Update user view.
+
+    If the request type is POST and the user is logged in, update the users
+    email based on the form data and redirect back to the user profile view.
+    Otherwise, display the user update email form.
 
     Arguments:
     request - Django object containing request information.
@@ -190,30 +234,41 @@ def game(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
-    title = "Game"
+    # Check if user is logged in.
+    if not request.user.is_authenticated:
+        # User is not logged in, show HTTP 403.
+        raise PermissionDenied
+
+    # Set title.
+    title = "Update Email"
 
     # Check the request type.
     if request.method == "POST":
-        # Check if the user is logged in.
-        if request.user.is_authenticated:
-            # Get the score, user and player.
-            score = int(request.POST["score"])
-            player = Player.objects.get(user=request.user)
+        # Create a form with the POST data and the logged in user.
+        form = UserUpdateEmailForm(request.POST)
 
-            # Increase the player score. 
-            player.points += score
-            player.save()
+        # Check form validity.
+        if form.is_valid():
+            # Get user and email.
+            user = request.user
+            email = form.cleaned_data.get("email")
+            
+            # Save the new user details.
+            user.email = email
+            user.save()
+
+            # Show message of success to user.
+            messages.success(request, "User email updated successfully!")
 
             # Redirect to the profile view.
-            return redirect("profile")
+            return redirect("user", username=user.username)
+        else:
+            # Show error messages.
+            display_error_messages(request, form)
 
-    # Select a random event from the list of events and use that as the event
-    # the user partipates in.
-    event_list = Event.objects.all()
-    event = choice(event_list)
-
-    # Show the game.
-    return render(request, "game/game.html", {"event": event, "title": title})
+    # Create an empty update form and show it.
+    form = UserUpdateEmailForm()
+    return render(request, "game/update_user.html", {"title": title, "form": form})
 
 
 def list_events(request):
@@ -487,8 +542,7 @@ def create_treasure_chest(request):
     # Check if the user is a game master.
     check_user_is_game_master(request)
 
-
-
+    # Set title.
     title = "Create Treasure Chest"
 
     # Check the request type.
@@ -621,34 +675,41 @@ def delete_treasure_chest(request, treasure_chest_id):
     return redirect("list treasure chests")
 
 
-def profile(request):
-    """User profile view.
+def check_user_is_game_master(request):
+    """Check the privileges of the user.
 
-    Display the user.
-
-    Arguments:
-    request - Django object containing request information.
-
-    Returns:
-    render - Django function to give a HTTP response with a template.
-    """
-    title = "Profile"
-    return render(request, "game/profile.html", {"title": title})
-
-
-def leaderboard(request):
-    """Leaderboard view.
-
-    Display the top 10 players by total score.
+    Checks the user is authenticated and they are a game master. If they are
+    not, then send a HTTP 403 response.
 
     Arguments:
     request - Django object containing request information.
 
     Returns:
-    render - Django function to give a HTTP response with a template.
+    None.
     """
-    title = "Leaderboard"
+    if not request.user.is_authenticated:
+        raise PermissionDenied
 
-    top_players_list = Player.objects.order_by("-points")[:10]
-    return render(request, "game/leaderboard.html",
-            {"top_players_list": top_players_list, "title": title})
+    if not request.user.player.is_game_master:
+        raise PermissionDenied
+
+
+def display_error_messages(request, form):
+    """Display error messages from forms.
+
+    Iterates through all the errors in a form and displays each of them as a
+    new message.
+
+    Arguments:
+    request - Django object containing request information.
+    form - Django form to get errors from.
+
+    Returns:
+    None.
+    """
+    # Form invalid, show generic error message.
+    messages.warning(request, "Please correct the errors below!")
+
+    # Iterate through list of errors to show specific problems.
+    for field, message in form.errors.items():
+        messages.warning(request, field + ": " + message[0])
