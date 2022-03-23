@@ -44,8 +44,10 @@
             <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
             {% if user.is_authenticated %}
               {% if user.player.is_game_master %}
-                <li><a class="nav-link scrollto" href="{% url 'create event' %}">Create Event</a></li>
+                <li><a class="nav-link scrollto" href="{% url 'list treasure chests' %}">Treasure Chests</a></li>
               {% endif %}
+                <li><a class="nav-link scrollto" href="{% url 'list events' %}">Events</a></li>
+                <li><a class="nav-link scrollto" href="{% url 'leaderboard' %}">Leaderboard</a></li>
                 <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
                 <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
                 <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>

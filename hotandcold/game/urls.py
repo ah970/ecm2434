@@ -1,16 +1,6 @@
 """URL configuration for game app.
 
 The `urlpatterns` list routes URLs to views.
-
-The following list shows the mapping:
-    / -> Home.
-    /test/ -> Test.
-    /login/ -> Login.
-    /logout/ -> Logout.
-    /register/ -> Account creation/registration.
-    /game/ -> Game.
-    /create_event -> Event creation.
-    /profile/ -> User profile.
 """
 
 from django.urls import path
