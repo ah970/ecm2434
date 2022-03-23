@@ -14,7 +14,6 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("game/", views.game, name="game"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
-    path("test/", views.test, name="test"),
 
     # Users and authentication.
     path("login/", views.log_in, name="login"),
