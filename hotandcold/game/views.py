@@ -272,8 +272,8 @@ def create_event(request):
     request - Django object containing request information.
 
     Returns:
-    redirect - Django function to redirect the user to another view (create
-    event).
+    redirect - Django function to redirect the user to another view (list
+    events).
     OR
     render - Django function to give a HTTP response with a template.
     """
@@ -306,8 +306,8 @@ def create_event(request):
             # Show message of success to user.
             messages.success(request, "Event saved successfully!")
 
-            # Redirect to the create event view.
-            return redirect("create event")
+            # Redirect to the list events view.
+            return redirect("list events")
         else:
             # Show error messages.
             display_error_messages(request, form)
@@ -512,8 +512,8 @@ def create_treasure_chest(request):
             # Show message of success to user.
             messages.success(request, "Treasure chest created successfully!")
 
-            # Redirect to the create treasure chest view.
-            return redirect("create treasure chest")
+            # Redirect to the list treasure chests view.
+            return redirect("list treasure chests")
         else:
             # Show error messages.
             display_error_messages(request, form)
