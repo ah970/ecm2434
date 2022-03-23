@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <!-- Metadata -->
-    <title>{{ title }} - dExtination</title>
+    <title>404 Not Found - dExtination</title>
     
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -36,7 +36,7 @@
     <header id="header" class="fixed-top header-inner-pages">
       <!-- Title -->
       <div class="container d-flex align-items-center">
-	<h1 class="logo me-auto"><a href="{% url 'home' %}">dExtination</a></h1>
+        <h1 class="logo me-auto"><a href="home">dExtination</a></h1>
         
         <!-- Navigation -->
         <nav id="navbar" class="navbar">
@@ -44,10 +44,8 @@
             <li><a class="nav-link scrollto" href="{% url 'home' %}">Home</a></li>
 	    {% if user.is_authenticated %}
 	      {% if user.player.is_game_master %}
-	        <li><a class="nav-link scrollto" href="{% url 'list treasure chests' %}">Treasure Chests</a></li>
+	        <li><a class="nav-link scrollto" href="{% url 'create event' %}">Create Event</a></li>
 	      {% endif %}
-	      <li><a class="nav-link scrollto" href="{% url 'list events' %}">Events</a></li>
-	      <li><a class="nav-link scrollto" href="{% url 'leaderboard' %}">Leaderboard</a></li>
               <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
               <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
               <li><a class="getstarted scrollto" href="{% url 'game' %}">Game</a></li>
@@ -67,10 +65,10 @@
       <section id="breadcrumbs" class="breadcrumbs">
         <div class="container">
         <ol>
-	  <li><a href="{% url 'home' %}">Home</a></li>
-	  <li>{{ title }}</li>
+          <li><a href="home">Home</a></li>
+	  <li>404 Not Found</li>
         </ol>
-	<h2>{{ title }}</h2>
+	<h2>404 Not Found</h2>
 	<ol>
 	  <li>User: {{ user.username|default:"Guest" }}</li>
 	</ol>
@@ -87,7 +85,8 @@
             </div>
           {% endfor %}
 
-          {% block content %}{% endblock %}
+	  <h1>404 Not Found</h1>
+	  <p>Where did it go?<p>
         </div>
       </section>
     </main>

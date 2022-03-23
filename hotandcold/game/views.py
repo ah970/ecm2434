@@ -5,17 +5,57 @@ Handles actual functionality of different views.
 
 from random import choice
 
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render, get_object_or_404
 
-from .models import Event, Player
-from .forms import UserRegistrationForm, EventCreationForm
+from .models import Event, Player, TreasureChest
+from .forms import UserRegistrationForm, EventCreationForm, TreasureChestCreationForm
 
 
 def test(request):
     return render(request, "game/extended.html", {"title": "Extended Page"})
+
+def check_user_is_game_master(request):
+    """Check the privileges of the user.
+
+    Checks the user is authenticated and they are a game master. If they are
+    not, then send a HTTP 403 response.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    None.
+    """
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    if not request.user.player.is_game_master:
+        raise PermissionDenied
+
+
+def display_error_messages(request, form):
+    """Display error messages from forms.
+
+    Iterates through all the errors in a form and displays each of them as a
+    new message.
+
+    Arguments:
+    request - Django object containing request information.
+    form - Django form to get errors from.
+
+    Returns:
+    None.
+    """
+    # Form invalid, show generic error message.
+    messages.warning(request, "Please correct the errors below!")
+
+    # Iterate through list of errors to show specific problems.
+    for field, message in form.errors.items():
+        messages.warning(request, field + ": " + message[0])
 
 
 def home(request):
@@ -128,12 +168,8 @@ def register(request):
             # Redirect to the home view.
             return redirect("home")
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
@@ -162,12 +198,11 @@ def game(request):
         if request.user.is_authenticated:
             # Get the score, user and player.
             score = int(request.POST["score"])
-            current_user = request.user
-            current_player = Player.objects.get(user=current_user)
+            player = Player.objects.get(user=request.user)
 
             # Increase the player score. 
-            current_player.points += score
-            current_player.save()
+            player.points += score
+            player.save()
 
             # Redirect to the profile view.
             return redirect("profile")
@@ -237,11 +272,15 @@ def create_event(request):
     request - Django object containing request information.
 
     Returns:
-    redirect - Django function to redirect the user to another view (create
-    event).
+    redirect - Django function to redirect the user to another view (list
+    events).
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Set the title.
     title = "Create Event"
 
     # Check the request type.
@@ -267,19 +306,20 @@ def create_event(request):
             # Show message of success to user.
             messages.success(request, "Event saved successfully!")
 
-            # Redirect to the create event view.
-            return redirect("create event")
+            # Redirect to the list events view.
+            return redirect("list events")
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
+            # Show error messages.
+            display_error_messages(request, form)
 
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
 
     # Create an empty event creation form and show it.
     form = EventCreationForm()
-    return render(request, "game/create_event.html", {"form": form, "title": title})
+    return render(request, "game/modify_object.html", {
+        "form": form,
+        "title": title,
+        "modification": "Create",
+        "object_type": "Event"})
 
 
 def update_event(request, event_id):
@@ -298,6 +338,9 @@ def update_event(request, event_id):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
     # Get specific event. 
     event = get_object_or_404(Event, pk=event_id)
 
@@ -328,12 +371,8 @@ def update_event(request, event_id):
             # Redirect back to details page.
             return redirect("event details", event_id=event_id)
         else:
-            # Form invalid, show generic error message.
-            messages.warning(request, "Please correct the errors below!")
-
-            # Iterate through list of errors to show specific problems.
-            for field, message in form.errors.items():
-                messages.warning(request, field + ": " + message[0])
+            # Show error messages.
+            display_error_messages(request, form)
 
     # Create a populated event creation form and show it.
     form = EventCreationForm(initial={
@@ -344,10 +383,13 @@ def update_event(request, event_id):
         "latitude": event.latitude,
         "longitude": event.longitude,
         })
-    return render(request, "game/update_event.html", {
+    return render(request, "game/modify_object.html", {
         "title": title,
         "form": form,
-        "event": event})
+        "object": event,
+        "modification": "Update",
+        "object_type": "Event"})
+
 
 def delete_event(request, event_id):
     """Event deletion view.
@@ -363,6 +405,9 @@ def delete_event(request, event_id):
     redirect - Django function to redirect the user to another view (list
     events).
     """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
     # Delete the object.
     Event.objects.filter(pk=event_id).delete()
 
@@ -371,6 +416,210 @@ def delete_event(request, event_id):
 
     # Redirect back to event list page.
     return redirect("list events")
+
+
+def list_treasure_chests(request):
+    """TreasureChest list view.
+
+    Shows a list of all treasure chests.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Set title.
+    title = "List Treasure Chests"
+
+    # Get list of treasure chests.
+    treasure_chests_list = TreasureChest.objects.all()
+
+    return render(request, "game/list_treasure_chests.html", {
+        "title": title,
+        "treasure_chests_list": treasure_chests_list,
+        })
+
+
+def treasure_chest_details(request, treasure_chest_id):
+    """Treasure chest details view.
+
+    Shows details relating to a specific treasure chest.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id (int) - ID of the treasure chest to show.
+    """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Get specific treasure chest.
+    treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
+
+    # Set title to include treasure chest name.
+    title = "List Treasure Chests: " + treasure_chest.name
+
+    return render(request, "game/treasure_chest_details.html", {
+        "title": title,
+        "treasure_chest": treasure_chest,
+        })
+
+
+def create_treasure_chest(request):
+    """Treasure chest creation view.
+    
+    If the request type is POST, create the treasure chest and redirect the
+    user to the treasure chest list view. Otherwise, display the treasure
+    chest creation form.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    treasure chests).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+
+
+    title = "Create Treasure Chest"
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = TreasureChestCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from form.
+            name = form.cleaned_data.get("name")
+            points = form.cleaned_data.get("points")
+            latitude = form.cleaned_data.get("latitude")
+            longitude = form.cleaned_data.get("longitude")
+
+            # Create treasure chest with fields.
+            treasure_chest = TreasureChest(name=name, points=points,
+                    latitude=latitude, longitude=longitude)
+            treasure_chest.save()
+
+            # Show message of success to user.
+            messages.success(request, "Treasure chest created successfully!")
+
+            # Redirect to the list treasure chests view.
+            return redirect("list treasure chests")
+        else:
+            # Show error messages.
+            display_error_messages(request, form)
+
+    # Create an empty treasure chest creation form and show it. 
+    form = TreasureChestCreationForm()
+    return render(request, "game/modify_object.html", {
+        "title": title,
+        "form": form,
+        "modification": "Create",
+        "object_type": "Treasure Chest",
+        })
+
+
+def update_treasure_chest(request, treasure_chest_id):
+    """Treasure chest update view.
+
+    If the request type is POST, update the treasure chest and redirect the
+    user to the treasure chest details page. Otherwise, display the treasure
+    chest creation form.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id (int) - ID of treasure chest to update.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (treasure
+    chest details).
+    OR
+    render - Django function to give a HTTP response with a template.
+    """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Get specific treasure chest.
+    treasure_chest = get_object_or_404(TreasureChest, pk=treasure_chest_id)
+
+    # Set title to include treasure chest name.
+    title = "Update Treasure Chest: " + treasure_chest.name
+
+    # Check the request type.
+    if request.method == "POST":
+        # Create a form with the POST data.
+        form = TreasureChestCreationForm(request.POST)
+
+        # Check form validity.
+        if form.is_valid():
+            # Get fields from the form and update the treasure chest.
+            treasure_chest.name = form.cleaned_data.get("name")
+            treasure_chest.points = form.cleaned_data.get("points")
+            treasure_chest.latitude = form.cleaned_data.get("latitude")
+            treasure_chest.longitude = form.cleaned_data.get("longitude")
+
+            # Save the treasure chest.
+            treasure_chest.save()
+
+            # Show message of success to user.
+            messages.success(request, "Treasure Chest updated successfully!")
+            
+            # Redirect back to details page.
+            return redirect("treasure chest details", treasure_chest_id=treasure_chest_id)
+        else:
+            # Show error messages.
+            display_error_messages(request, form)
+
+    # Create a populated treasure chest creation form and show it.
+    form = TreasureChestCreationForm(initial={
+        "name": treasure_chest.name,
+        "points": treasure_chest.points,
+        "latitude": treasure_chest.latitude,
+        "longitude": treasure_chest.longitude,
+        })
+    return render(request, "game/update_treasure_chest.html", {
+        "title": title,
+        "form": form,
+        "object": treasure_chest,
+        "modification": "Update",
+        "object_type": "Treasure Chest"})
+
+
+def delete_treasure_chest(request, treasure_chest_id):
+    """Treasure chest deletion view.
+
+    Delete the treasure specified by the treasure chest ID and redirect the
+    user to the treasure chest list.
+
+    Arguments:
+    request - Django object containing request information.
+    treasure_chest_id -  ID of treasure chest to delete.
+
+    Returns:
+    redirect - Django function to redirect the user to another view (list
+    treasure chests).
+    """
+    # Check if the user is a game master.
+    check_user_is_game_master(request)
+
+    # Delete the treasure chest.
+    TreasureChest.objects.filter(pk=treasure_chest_id).delete()
+
+    # Display message informing the user object has been deleted.
+    messages.success(request, "Treasure Chest " + str(treasure_chest_id) + " deleted!")
+    
+    # Redirect the user back to the treasure chest list page.
+    return redirect("list treasure chests")
+
 
 def profile(request):
     """User profile view.
