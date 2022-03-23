@@ -13,7 +13,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 
 from .models import Event, Player, Participation, TreasureChest
-from .forms import UserRegistrationForm, UserUpdateEmailForm,
+from .forms import UserRegistrationForm, UserUpdateEmailForm, \
     EventCreationForm, TreasureChestCreationForm
 
 
@@ -144,7 +144,7 @@ def leaderboard(request):
 
     top_players_list = Player.objects.order_by("-points")[:10]
     return render(request, "game/leaderboard.html", {"title": title,
-            {"top_players_list": top_players_list})
+        "top_players_list": top_players_list})
 
 
 def log_in(request):
