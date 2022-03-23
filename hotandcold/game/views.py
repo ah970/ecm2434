@@ -90,7 +90,7 @@ def game(request, event_id):
             participation.save()
 
             # Redirect to the profile view.
-            return redirect("profile")
+            return redirect("game over", participation_id=participation.id)
 
     # Get event and check if event is live.
     event = get_object_or_404(Event, pk=event_id)
@@ -100,6 +100,7 @@ def game(request, event_id):
 
     # Show the game.
     return render(request, "game/game.html", {"event": event, "title": title})
+
 
 def game_over(request, participation_id):
     """Game over view.
