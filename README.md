@@ -14,14 +14,14 @@ Using the IDE [VScode](https://code.visualstudio.com/)
 2. Run manage.py with the command "python3 manage.py runserver"
 3. Follow the terminal instructions to connet to your website
 
+
+
 ## Steps to create a superuser
-* This step is needed if running it locally
+*This step is needed if running it locally*
 1. python manage.py makemigrations 
 2. python manage.py migrate 
 3. python manage.py createsuperuser 
  
-
-
 
 ## Project Contents
 Found within the project src folder includes:
