@@ -21,6 +21,7 @@ urlpatterns = [
     path("logout/", views.log_out, name="logout"),
     path("register/", views.register, name="register"),
     path("profile/", views.profile, name="profile"),
+    path("profile/update_email/", views.update_user_email, name="update user email"),
     path("users/<str:username>/", views.user_details, name="user"),
    
     # Event CRUD operations.
