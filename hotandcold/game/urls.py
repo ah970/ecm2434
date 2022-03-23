@@ -20,7 +20,7 @@ urlpatterns = [
     path("logout/", views.log_out, name="logout"),
     path("register/", views.register, name="register"),
     path("users/<str:username>/", views.user_details, name="user"),
-    path("users/update_email/", views.update_user_email, name="update user email"),
+    path("update_email/", views.update_user_email, name="update user email"),
    
     # Event CRUD operations.
     path("events/", views.list_events, name="list events"),
