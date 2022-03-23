@@ -20,6 +20,14 @@ class UserRegistrationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ("email",)
 
 
+class UserUpdateEmailForm(forms.Form):
+    """User update email form.
+
+    Used for updating the email of a user.
+    """
+    email = forms.EmailField()
+
+
 class EventCreationForm(forms.Form):
     """Event creation form.
 
