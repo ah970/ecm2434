@@ -692,7 +692,7 @@ def update_treasure_chest(request, treasure_chest_id):
         "latitude": treasure_chest.latitude,
         "longitude": treasure_chest.longitude,
         })
-    return render(request, "game/update_treasure_chest.html", {
+    return render(request, "game/modify_object.html", {
         "title": title,
         "form": form,
         "object": treasure_chest,
