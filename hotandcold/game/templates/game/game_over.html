@@ -1,0 +1,10 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+
+<h3>Score: {{ participation.score }}</h3>
+
+<p><a href="{% url 'event details' participation.event_id %}">Event</a></p>
+<p><a href="{% url 'user' user.username %}">Profile</a></p>
+
+{% endblock %}
