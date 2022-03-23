@@ -3,17 +3,18 @@
 Handles actual functionality of different views.
 """
 
-from random import choice
-
-from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import timezone
 
-from .models import Event, Player, TreasureChest
-from .forms import UserRegistrationForm, UserUpdateEmailForm, EventCreationForm, TreasureChestCreationForm
+from .models import Event, Player, Participation, TreasureChest
+from .forms import UserRegistrationForm, UserUpdateEmailForm, \
+    EventCreationForm, TreasureChestCreationForm
 
 
 def home(request):
@@ -27,12 +28,35 @@ def home(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
-    player_score_list = Player.objects.order_by("-points")[:10]
-    context = {"player_score_list": player_score_list}
-    return render(request, "game/home.html", context)
+    return render(request, "game/home.html", None)
 
 
-def game(request):
+@login_required(login_url="/login")
+def game_list(request):
+    """Game list view.
+
+    Shows a list of live games to play.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Set the title.
+    title = "Game List"
+
+    # Get current datetime and list of events which are live.
+    current_datetime = timezone.now()
+    live_events_list = Event.objects.filter(start__lte=current_datetime,
+            end__gte=current_datetime)
+
+    return render(request, "game/game_list.html", {"title": title,
+        "live_events_list": live_events_list})
+
+
+@login_required(login_url="/login")
+def game(request, event_id):
     """Game view.
 
     If the request type is POST and the user is logged in, save the user score
@@ -40,38 +64,71 @@ def game(request):
 
     Arguments:
     request - Django object containing request information.
+    event_id - ID of event to use.
 
     Returns:
     redirect - Django function to redirect the user to another view (profile).
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Set title.
     title = "Game"
 
     # Check the request type.
     if request.method == "POST":
         # Check if the user is logged in.
         if request.user.is_authenticated:
-            # Get the score, user and player.
+            # Get the score, event, user and player.
             score = int(request.POST["score"])
+            event = get_object_or_404(Event, pk=event_id)
             player = Player.objects.get(user=request.user)
 
             # Increase the player score. 
             player.points += score
             player.save()
 
-            # Redirect to the profile view.
-            return redirect("profile")
+            # Create participation.
+            participation = Participation(event=event, player=player, score=score)
+            participation.save()
 
-    # Select a random event from the list of events and use that as the event
-    # the user partipates in.
-    event_list = Event.objects.all()
-    event = choice(event_list)
+            # Redirect to the profile view.
+            return redirect("game over", participation_id=participation.id)
+
+    # Get event and check if event is live.
+    event = get_object_or_404(Event, pk=event_id)
+    if not event.get_status() == "Live":
+        # Event is not live, do not allow user to go further.
+        raise PermissionDenied
 
     # Show the game.
-    return render(request, "game/game.html", {"event": event, "title": title})
+    return render(request, "game/game.html", {"title": title, "event": event})
 
 
+@login_required(login_url="/login")
+def game_over(request, participation_id):
+    """Game over view.
+
+    Show the users score at the end of a game.
+
+    Arguments:
+    request - Django object containing request information.
+    participation_id - ID of participation object to get.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Set title.
+    title = "Game Over"
+
+    # Get participation object.
+    participation = get_object_or_404(Participation, pk=participation_id)
+
+    # Show game over screen.
+    return render(request, "game/game_over.html", {"title": title,
+        "participation": participation})
+
+
+@login_required(login_url="/login")
 def leaderboard(request):
     """Leaderboard view.
 
@@ -86,8 +143,8 @@ def leaderboard(request):
     title = "Leaderboard"
 
     top_players_list = Player.objects.order_by("-points")[:10]
-    return render(request, "game/leaderboard.html",
-            {"top_players_list": top_players_list, "title": title})
+    return render(request, "game/leaderboard.html", {"title": title,
+        "top_players_list": top_players_list})
 
 
 def log_in(request):
@@ -102,6 +159,7 @@ def log_in(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
+    # Set title.
     title = "Login"
 
     # Check the request type.
@@ -130,7 +188,7 @@ def log_in(request):
     
     # Create an empty login form and show it.
     form = AuthenticationForm()
-    return render(request, "game/login.html", {"form": form, "title": title})
+    return render(request, "game/login.html", {"title": title, "form": form})
 
 
 def log_out(request):
@@ -164,6 +222,7 @@ def register(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
+    # Set title.
     title = "Account Creation"
 
     # Check the request type.
@@ -189,9 +248,11 @@ def register(request):
 
     # Create an empty registration form and show it.
     form = UserRegistrationForm()
-    return render(request, "game/register.html", {"form": form, "title": title})
+    return render(request, "game/register.html", {"title": title,
+        "form": form})
 
 
+@login_required(login_url="/login")
 def user_details(request, username):
     """User details view.
 
@@ -205,20 +266,17 @@ def user_details(request, username):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
-    # Check if user is logged in.
-    if not request.user.is_authenticated:
-        # User is not logged in, show HTTP 403.
-        raise PermissionDenied
-
     # Get user by username.
     user = get_object_or_404(User, username=username)
 
     # Set title to include username.
     title = "Profile: " + username
 
-    return render(request, "game/user.html", {"title": title, "show_user": user})
+    return render(request, "game/user.html", {"title": title,
+        "show_user": user})
 
 
+@login_required(login_url="/login")
 def update_user_email(request):
     """Update user view.
 
@@ -234,11 +292,6 @@ def update_user_email(request):
     OR
     render - Django function to give a HTTP response with a template.
     """
-    # Check if user is logged in.
-    if not request.user.is_authenticated:
-        # User is not logged in, show HTTP 403.
-        raise PermissionDenied
-
     # Set title.
     title = "Update Email"
 
@@ -268,9 +321,11 @@ def update_user_email(request):
 
     # Create an empty update form and show it.
     form = UserUpdateEmailForm()
-    return render(request, "game/update_user.html", {"title": title, "form": form})
+    return render(request, "game/update_user.html", {"title": title,
+        "form": form})
 
 
+@login_required(login_url="/login")
 def list_events(request):
     """List events view.
 
@@ -282,17 +337,17 @@ def list_events(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
+    # Set title.
     title = "List Events"
 
     # Get list of events ordered by the end datetime.
     events_list = Event.objects.order_by("end")
 
-    return render(request, "game/list_events.html", {
-        "title": title,
-        "events_list": events_list,
-        })
+    return render(request, "game/list_events.html", {"title": title,
+        "events_list": events_list})
 
 
+@login_required(login_url="/login")
 def event_details(request, event_id):
     """Event details view.
 
@@ -311,12 +366,11 @@ def event_details(request, event_id):
     # Set title to include event title.
     title = "List Events: " + event.title
 
-    return render(request, "game/event_details.html", {
-        "title": title,
-        "event": event,
-        })
+    return render(request, "game/event_details.html", {"title": title,
+        "event": event})
 
 
+@login_required(login_url="/login")
 def create_event(request):
     """Event creation view.
 
@@ -354,8 +408,8 @@ def create_event(request):
             longitude = form.cleaned_data.get("longitude")
 
             # Create event with fields.
-            event = Event(title=title, description=description,
-                    start=start, end=end, latitude=latitude, longitude=longitude)
+            event = Event(title=title, description=description, start=start,
+                    end=end, latitude=latitude, longitude=longitude)
             event.save()
 
             # Show message of success to user.
@@ -370,13 +424,11 @@ def create_event(request):
 
     # Create an empty event creation form and show it.
     form = EventCreationForm()
-    return render(request, "game/modify_object.html", {
-        "form": form,
-        "title": title,
-        "modification": "Create",
-        "object_type": "Event"})
+    return render(request, "game/modify_object.html", {"title": title,
+        "form": form, "modification": "Create", "object_type": "Event"})
 
 
+@login_required(login_url="/login")
 def update_event(request, event_id):
     """Event update view.
 
@@ -438,14 +490,12 @@ def update_event(request, event_id):
         "latitude": event.latitude,
         "longitude": event.longitude,
         })
-    return render(request, "game/modify_object.html", {
-        "title": title,
-        "form": form,
-        "object": event,
-        "modification": "Update",
+    return render(request, "game/modify_object.html", {"title": title,
+        "form": form, "object": event, "modification": "Update",
         "object_type": "Event"})
 
 
+@login_required(login_url="/login")
 def delete_event(request, event_id):
     """Event deletion view.
 
@@ -473,6 +523,7 @@ def delete_event(request, event_id):
     return redirect("list events")
 
 
+@login_required(login_url="/login")
 def list_treasure_chests(request):
     """TreasureChest list view.
 
@@ -493,12 +544,11 @@ def list_treasure_chests(request):
     # Get list of treasure chests.
     treasure_chests_list = TreasureChest.objects.all()
 
-    return render(request, "game/list_treasure_chests.html", {
-        "title": title,
-        "treasure_chests_list": treasure_chests_list,
-        })
+    return render(request, "game/list_treasure_chests.html", {"title": title,
+        "treasure_chests_list": treasure_chests_list})
 
 
+@login_required(login_url="/login")
 def treasure_chest_details(request, treasure_chest_id):
     """Treasure chest details view.
 
@@ -517,12 +567,11 @@ def treasure_chest_details(request, treasure_chest_id):
     # Set title to include treasure chest name.
     title = "List Treasure Chests: " + treasure_chest.name
 
-    return render(request, "game/treasure_chest_details.html", {
-        "title": title,
-        "treasure_chest": treasure_chest,
-        })
+    return render(request, "game/treasure_chest_details.html",
+            {"title": title, "treasure_chest": treasure_chest})
 
 
+@login_required(login_url="/login")
 def create_treasure_chest(request):
     """Treasure chest creation view.
     
@@ -574,14 +623,12 @@ def create_treasure_chest(request):
 
     # Create an empty treasure chest creation form and show it. 
     form = TreasureChestCreationForm()
-    return render(request, "game/modify_object.html", {
-        "title": title,
-        "form": form,
-        "modification": "Create",
-        "object_type": "Treasure Chest",
-        })
+    return render(request, "game/modify_object.html", {"title": title,
+        "form": form, "modification": "Create",
+        "object_type": "Treasure Chest"})
 
 
+@login_required(login_url="/login")
 def update_treasure_chest(request, treasure_chest_id):
     """Treasure chest update view.
 
@@ -628,7 +675,8 @@ def update_treasure_chest(request, treasure_chest_id):
             messages.success(request, "Treasure Chest updated successfully!")
             
             # Redirect back to details page.
-            return redirect("treasure chest details", treasure_chest_id=treasure_chest_id)
+            return redirect("treasure chest details",
+                    treasure_chest_id=treasure_chest_id)
         else:
             # Show error messages.
             display_error_messages(request, form)
@@ -640,14 +688,12 @@ def update_treasure_chest(request, treasure_chest_id):
         "latitude": treasure_chest.latitude,
         "longitude": treasure_chest.longitude,
         })
-    return render(request, "game/update_treasure_chest.html", {
-        "title": title,
-        "form": form,
-        "object": treasure_chest,
-        "modification": "Update",
+    return render(request, "game/modify_object.html", {"title": title,
+        "form": form, "object": treasure_chest, "modification": "Update",
         "object_type": "Treasure Chest"})
 
 
+@login_required(login_url="/login")
 def delete_treasure_chest(request, treasure_chest_id):
     """Treasure chest deletion view.
 
@@ -669,7 +715,8 @@ def delete_treasure_chest(request, treasure_chest_id):
     TreasureChest.objects.filter(pk=treasure_chest_id).delete()
 
     # Display message informing the user object has been deleted.
-    messages.success(request, "Treasure Chest " + str(treasure_chest_id) + " deleted!")
+    messages.success(request, "Treasure Chest " + str(treasure_chest_id)
+            + " deleted!")
     
     # Redirect the user back to the treasure chest list page.
     return redirect("list treasure chests")

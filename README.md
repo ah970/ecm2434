@@ -37,8 +37,11 @@ Please feel free to contribute to this project, since this is an open source pro
 Ahmed:
 - [https://github.com/ah970](https://github.com/ah970])
 
-Chrisotpher:
+Christopher:
 - [https://github.com/christophergayiuman](https://github.com/christophergayiuman)
+
+Haris:
+- [https://github.com/Haris-Aftab](https://github.com/Haris-Aftab)
 
 Charlie:
 - [https://github.com/CharliePW](https://github.com/CharliePW)
@@ -55,6 +58,6 @@ Project link:
 [https://github.com/ah970/ecm2434](https://github.com/ah970/ecm2434)
 
 ## Acknowledgements
-* [Django Doccumentatoin](https://docs.djangoproject.com/en/4.0/)
+* [Django Documentation](https://docs.djangoproject.com/en/4.0/)
 * [Github Template Guide](https://github.com/othneildrew/Best-README-Template)
 * [Mastering Github Markdown](https://guides.github.com/features/mastering-markdown/)
