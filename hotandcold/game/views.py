@@ -5,14 +5,15 @@ Handles actual functionality of different views.
 
 from random import choice
 
-from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import timezone
 
-from .models import Event, Player, TreasureChest
+from .models import Event, Player, Participation, TreasureChest
 from .forms import UserRegistrationForm, UserUpdateEmailForm, EventCreationForm, TreasureChestCreationForm
 
 
@@ -27,12 +28,33 @@ def home(request):
     Returns:
     render - Django function to give a HTTP response with a template.
     """
-    player_score_list = Player.objects.order_by("-points")[:10]
-    context = {"player_score_list": player_score_list}
-    return render(request, "game/home.html", context)
+    return render(request, "game/home.html", None)
 
 
-def game(request):
+def game_list(request):
+    """Game list view.
+
+    Shows a list of live games to play.
+
+    Arguments:
+    request - Django object containing request information.
+
+    Returns:
+    render - Django function to give a HTTP response with a template.
+    """
+    # Set the title.
+    title = "Game List"
+
+    # Get current datetime and list of events which are live.
+    current_datetime = timezone.now()
+    live_events_list = Event.objects.filter(start__lte=current_datetime,
+            end__gte=current_datetime)
+
+    return render(request, "game/game_list.html", {"title": title,
+        "live_events_list": live_events_list})
+
+
+def game(request, event_id):
     """Game view.
 
     If the request type is POST and the user is logged in, save the user score
@@ -40,6 +62,7 @@ def game(request):
 
     Arguments:
     request - Django object containing request information.
+    event_id - ID of event to use.
 
     Returns:
     redirect - Django function to redirect the user to another view (profile).
@@ -52,21 +75,27 @@ def game(request):
     if request.method == "POST":
         # Check if the user is logged in.
         if request.user.is_authenticated:
-            # Get the score, user and player.
+            # Get the score, event, user and player.
             score = int(request.POST["score"])
+            event = get_object_or_404(Event, pk=event_id)
             player = Player.objects.get(user=request.user)
 
             # Increase the player score. 
             player.points += score
             player.save()
 
+            # Create participation.
+            participation = Participation(event=event, player=player, score=score)
+            participation.save()
+
             # Redirect to the profile view.
             return redirect("profile")
 
-    # Select a random event from the list of events and use that as the event
-    # the user partipates in.
-    event_list = Event.objects.all()
-    event = choice(event_list)
+    # Get event and check if event is live.
+    event = get_object_or_404(Event, pk=event_id)
+    if not event.get_status() == "Live":
+        # Event is not live, do not allow user to go further.
+        raise PermissionDenied
 
     # Show the game.
     return render(request, "game/game.html", {"event": event, "title": title})

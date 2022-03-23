@@ -1,0 +1,30 @@
+{% extends "game/base.html" %}
+
+{% block content %}
+
+{% if live_events_list %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in live_events_list %}
+        <tr>
+          <td><a href="{% url 'event details' event.id %}">{{ event.title }}</a></td>
+          <td>{{ event.start }}</td>
+          <td>{{ event.end }}</td>
+	  <th scope="row"><a href="{% url 'play game' event.id %}">Go!</a></th>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No Live Events.</p>
+{% endif %}
+
+{% endblock %}

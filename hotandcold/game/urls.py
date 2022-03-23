@@ -12,7 +12,8 @@ from . import views
 urlpatterns = [
      # Core views.
     path("", views.home, name="home"),
-    path("game/", views.game, name="game"),
+    path("game/", views.game_list, name="game"),
+    path("game/<int:event_id>", views.game, name="play game"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
 
     # Users and authentication.
