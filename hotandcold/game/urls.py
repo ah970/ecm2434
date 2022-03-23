@@ -14,6 +14,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("game/", views.game_list, name="game"),
     path("game/<int:event_id>", views.game, name="play game"),
+    path("game_over/<int:participation_id>", views.game_over, name="game over"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
 
     # Users and authentication.
