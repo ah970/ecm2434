@@ -100,8 +100,13 @@ def game(request, event_id):
         # Event is not live, do not allow user to go further.
         raise PermissionDenied
 
+    # Create list of coordinates from treasure chests.
+    treasure_chest_list = [[float(t.latitude), float(t.longitude), t.points] for t in
+            TreasureChest.objects.all()]
+
     # Show the game.
-    return render(request, "game/game.html", {"title": title, "event": event})
+    return render(request, "game/game.html", {"title": title, "event": event,
+        "treasure_chest_list": treasure_chest_list})
 
 
 @login_required(login_url="/login")

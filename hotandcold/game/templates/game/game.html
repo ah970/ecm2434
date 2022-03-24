@@ -30,6 +30,7 @@ border-radius: 50%;
 }
 </style>
 
+
 <div class="textInputCenter">
   <button id="color_button"class="button button5" onclick="getLocation()">click here</button>
 </div>
@@ -42,6 +43,28 @@ border-radius: 50%;
 <!-- Javascript to change button -->
 <script>
 //document.getElementById("demo").outerHTML= "NEW TEXT";
+var CURRENT_LAT = 0;
+var CURRENT_LONG = 0;
+var SEEN_LIST = [];
+var CHEST_LIST = [];
+
+
+//let array = [];
+//for i in treasure_chest_list {
+//add treasure chest to array {{chest.latitude}} {{chest.longitude}} etc
+//}
+
+function initialize() {
+  /* loops through all the treasure chests and finds the nearest one
+      if it is close enough, add the points, */
+  CHEST_LIST = {{ treasure_chest_list }};
+  //CHEST_LIST = [[1,2,100],[3,4,1000]];
+
+  return;
+}
+
+
+
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -68,6 +91,9 @@ function updateButton(position) {
   //TODO fetch destination coordinates from database - hardcoded to harrison building for now
   //let dest_lat = 50.737220; 
   //let dest_lng = -3.532380;
+
+  CURRENT_LAT = position.coords.latitude;
+  CURRENT_LONG = position.coords.longitude;
   
   let dest_lat = {{ event.latitude }};
   let dest_lng = {{ event.longitude }};
@@ -106,9 +132,50 @@ function updateButton(position) {
   document.getElementById("score").value = score;
   console.log("score after click: " + document.getElementById("score").value);
 
+  /* TREASURE CHEST FINDING */
+
+  //First, find the closest treasure chest
+  let closest_chest_distance = Infinity;
+  let closest_chest_index;
+  for (let i = 0; i < CHEST_LIST.length; i++) {
+    distance = calcDistance(CURRENT_LAT, CURRENT_LONG, CHEST_LIST[i][0],CHEST_LIST[i][1]);
+    if (distance < closest_chest_distance) {
+      if (!SEEN_LIST.includes(i)) {
+        closest_chest_distance = distance;
+        closest_chest_index = i;
+      }
+      
+    }
+  }
+
+  //DEBUG
+  //closest_chest_distance = 65;
+
+  //Then, see if the closest is within range
+  if (calcDegrees(closest_chest_distance,game_bound) > 96) {
+    //If it's close enough to be collected add the points to the user's score
+    score += CHEST_LIST[closest_chest_index][2];
+    document.getElementById("color_button").innerHTML=degrees + ' degrees' + '<br><br><br> you found a treasure chest! ' + CHEST_LIST[closest_chest_index][2] + ' points have been added to your score.';
+    SEEN_LIST.push(closest_chest_index);
+  } else if (calcDegrees(closest_chest_distance,game_bound) > 80){
+    // If the'yre pretty nearby, tell the user they are near a treasure chest
+    document.getElementById("color_button").innerHTML=degrees + ' degrees' + '<br><br><br> you are ' + closest_chest_distance + ' metres away from a treasure chest...';
+  } else {
+    //If we get here they're not very close to a chest
+    document.getElementById("color_button").innerHTML=degrees + ' degrees' + '<br><br><br> no treasure chests nearby...';
+    console.log("not near a chest");
+
+  }
+
+  //If the user is above 96 degrees they are close enough to have reached the destination.
   if (degrees > 96) {
     document.getElementById("scoreForm").submit();
   }
+
+
+
+
+
 }
 
 //calculates the distance between 2 GPS coordinates
