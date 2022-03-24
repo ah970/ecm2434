@@ -101,8 +101,8 @@ def game(request, event_id):
         raise PermissionDenied
 
     # Create list of coordinates from treasure chests.
-    treasure_chest_list = [[t.latitude, t.longitude, t.points] for t in
-            TreasureChest.objects.get()]
+    treasure_chest_list = [[float(t.latitude), float(t.longitude), t.points] for t in
+            TreasureChest.objects.all()]
 
     # Show the game.
     return render(request, "game/game.html", {"title": title, "event": event,
