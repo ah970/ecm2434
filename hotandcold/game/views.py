@@ -101,7 +101,7 @@ def game(request, event_id):
         raise PermissionDenied
 
     # Create list of coordinates from treasure chests.
-    treasure_chest_list = [(t.latitude, t.longitude) for t in
+    treasure_chest_list = [[t.latitude, t.longitude, t.points] for t in
             TreasureChest.objects.get()]
 
     # Show the game.
