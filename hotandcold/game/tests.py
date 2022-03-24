@@ -1,3 +1,5 @@
+"""Tests for game app."""
+
 import datetime
 
 from django.test import Client, TestCase
