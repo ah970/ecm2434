@@ -9,6 +9,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-al=ag^ipx_@+4#jwt$j&hyh81!ys%xh*k^6-yb&o_)i!ban96r
 DEBUG = True
 
 # List of allowed hosts.
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["dextination-345103.nw.r.appspot.com"]
 
 
 # Application definition.
@@ -72,12 +73,27 @@ WSGI_APPLICATION = 'hotandcold.wsgi.application'
 
 # Database.
 # See https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.getenv("GAE_APPLICATION", None):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "HOST": "/cloudsql/dextination-345103:europe-west2:dextination",
+            "USER": "dextination",
+            "PASSWORD": "P@s5w0rd",
+            "NAME": "dextination",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": 'django.db.backends.mysql',
+            "HOST": "127.0.0.1",
+            "PORT": "3306",
+            "USER": "dextination",
+            "PASSWORD": "P@s5w0rd",
+            "NAME": "dextination",
+        }
+    }
 
 
 # Password validation.
@@ -112,6 +128,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images).
 # See https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = 'static/'
+STATIC_ROOT = "static"
 
 # Default primary key field type.
 # See https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
