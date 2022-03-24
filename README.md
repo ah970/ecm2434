@@ -19,8 +19,10 @@ Using the IDE [VScode](https://code.visualstudio.com/)
 6. Run manage.py with the command "python3 manage.py runserver"
 7. Follow the terminal instructions to connet to your website
 
+## How To Play
+Start by clicking the button in the center of the screen. This will initially give you an indication of how close you are to the end point by displaying a 'temperature' between 0 and 100. Walk in a direction that you think the end point will be, then click the button again. Depending on whether the temperature goes hotter or colder, means you are getting closer or further away from the endpoint respectivly. Once you think you are at the endpoint, press the temperature button and the game will end if you are correct. However, the more times you press the button, the lower the score you will get. Along the way, you may encounter a treasure chest that will gift you more points. 
 
- 
+
 ## Project Contents
 Found within the project src folder includes:
 * to be completed when project is finished
