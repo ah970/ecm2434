@@ -13,8 +13,8 @@ urlpatterns = [
      # Core views.
     path("", views.home, name="home"),
     path("game/", views.game_list, name="game"),
-    path("game/<int:event_id>", views.game, name="play game"),
-    path("game_over/<int:participation_id>", views.game_over, name="game over"),
+    path("game/<int:event_id>/", views.game, name="play game"),
+    path("game_over/<int:participation_id>/", views.game_over, name="game over"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
 
     # Users and authentication.
@@ -28,8 +28,8 @@ urlpatterns = [
     path("events/", views.list_events, name="list events"),
     path("events/<int:event_id>/", views.event_details, name="event details"),
     path("events/new/", views.create_event, name="create event"),
-    path("events/<int:event_id>/update", views.update_event, name="update event"),
-    path("events/<int:event_id>/delete", views.delete_event, name="delete event"),
+    path("events/<int:event_id>/update/", views.update_event, name="update event"),
+    path("events/<int:event_id>/delete/", views.delete_event, name="delete event"),
 
     # Treasure chest CRUD operations.
     path("treasure_chests/", views.list_treasure_chests, name="list treasure chests"),
